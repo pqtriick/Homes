@@ -1,0 +1,6 @@
+name: Homes
+version: '${version}'
+main: de.pqtriick.homes.Homes
+api-version: 1.16
+authors: [ pqtriick ]
+description: Set custom homes
