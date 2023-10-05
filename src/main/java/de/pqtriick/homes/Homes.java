@@ -1,5 +1,6 @@
 package de.pqtriick.homes;
 
+import de.pqtriick.homes.commands.testin;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.listener.initalizer.JoinConfig;
 import org.bukkit.Bukkit;
@@ -15,6 +16,7 @@ public final class Homes extends JavaPlugin {
         Config.createDir();
 
         Bukkit.getPluginManager().registerEvents(new JoinConfig(), this);
+        this.getCommand("testin").setExecutor(new testin());
 
 
     }

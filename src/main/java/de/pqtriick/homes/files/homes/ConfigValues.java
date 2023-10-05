@@ -14,15 +14,17 @@ public class ConfigValues {
 
     public static void saveLocation(String name, double x, double y, double z, File file) {
         if (Config.userfileExists(file)) {
-            if (Config.getConfiguration(file).get("homes." + name) == null) {
-                Config.getConfiguration(file).set("homes", name);
-                Config.getConfiguration(file).set("homes." + name + ".X", x);
-                Config.getConfiguration(file).set("homes." + name + ".Y", y);
-                Config.getConfiguration(file).set("homes." + name + ".Z", z);
+            if (Config.getConfiguration(file).get("homes." + name) != null) {
+                System.out.println("Already exists");
+            } else {
+                Config.setDefaults(Config.getConfiguration(file), file, "homes." + name + ".X", String.valueOf(x));
+                Config.setDefaults(Config.getConfiguration(file), file, "homes." + name + ".Y", String.valueOf(y));
+                Config.setDefaults(Config.getConfiguration(file), file, "homes." + name + ".Z", String.valueOf(z));
+                Config.saveFile(Config.getConfiguration(file), file);
             }
         }
     }
-    
+
 
     /*public static Location(String name, File file) {
         return null

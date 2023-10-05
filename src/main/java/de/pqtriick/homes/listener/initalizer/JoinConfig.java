@@ -1,6 +1,8 @@
 package de.pqtriick.homes.listener.initalizer;
 
+import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
+import de.pqtriick.homes.files.homes.ConfigValues;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,10 +23,11 @@ public class JoinConfig implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        playerstorage = new File(Config.directory, player.getUniqueId() + ".yml");
+        playerstorage = new File(Homes.getInstance().getDataFolder().getPath(), player.getUniqueId() + ".yml");
         if (!Config.userfileExists(playerstorage))  {
             Config.createFile(playerstorage);
-            Config.setDefaults(Config.getConfiguration(playerstorage), playerstorage, "homes", "");
+            Config.saveFile(Config.getConfiguration(playerstorage), playerstorage);
+
         }
     }
 
