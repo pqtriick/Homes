@@ -17,6 +17,11 @@ public final class Homes extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new JoinConfig(), this);
         this.getCommand("testin").setExecutor(new testin());
+        //Particle Navigation
+        //Jump to home
+        //Delete home
+        //add home
+
 
 
     }

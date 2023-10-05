@@ -26,6 +26,7 @@ public class JoinConfig implements Listener {
         playerstorage = new File(Homes.getInstance().getDataFolder().getPath(), player.getUniqueId() + ".yml");
         if (!Config.userfileExists(playerstorage))  {
             Config.createFile(playerstorage);
+            Config.setDefaults(Config.getConfiguration(playerstorage), playerstorage, "homeamount", "0");
             Config.saveFile(Config.getConfiguration(playerstorage), playerstorage);
 
         }

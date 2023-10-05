@@ -12,6 +12,8 @@ import java.io.File;
 
 public class ConfigValues {
 
+    private static int amt;
+
     public static void saveLocation(String name, double x, double y, double z, File file) {
         if (Config.userfileExists(file)) {
             if (Config.getConfiguration(file).get("homes." + name) != null) {
@@ -26,7 +28,17 @@ public class ConfigValues {
     }
 
 
-    /*public static Location(String name, File file) {
-        return null
-    }*/
+    public static int getHomeAmount(File file) {
+        if (Config.userfileExists(file)) {
+            amt = (int) Config.getConfiguration(file).get("amount");
+        }
+        return amt;
+    }
+
+    public static void addHomeAmount(File file, int amount) {
+        if (Config.userfileExists(file)) {
+            Config.setDefaults(Config.getConfiguration(file), file, "amount", Integer.toString(amount));
+            Config.saveFile(Config.getConfiguration(file), file);
+        }
+    }
 }
