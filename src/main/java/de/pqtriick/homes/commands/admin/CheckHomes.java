@@ -33,7 +33,7 @@ public class CheckHomes implements CommandExecutor {
             if (args.length==1) {
                 playerdata = new File(Homes.getInstance().getDataFolder().getPath(), getPlayerUUID(args[0]) + ".yml");
                 if (playerdata.exists()) {
-                    homeinv = Bukkit.createInventory(null, 9*5, "§b" + args[0] + "s §3Homes");
+                    homeinv = Bukkit.createInventory(null, 9*5, "§b" + args[0] + " §3Homes");
                     invnumber = 0;
                     for (String homes : Config.getConfiguration(playerdata).getConfigurationSection("homes").getKeys(false)) {
                         homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, "§7➥ §aLeftclick to access\n§7➥ §cRightclick to delete"));
