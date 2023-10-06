@@ -34,9 +34,9 @@ public class Config {
 
     }
 
-    public static void set(File file, String path, String value) {
-        getConfiguration(file).set(path,value);
-        saveFile(getConfiguration(file), file);
+    public static void set(FileConfiguration config, File file, String path, String value) {
+        config.set(path,value);
+        saveFile(config, file);
 
     }
 

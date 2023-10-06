@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class DeleteHome implements Listener {
 
-    public static HashMap<Player, String> homedeletion = new HashMap<>();
+    public static HashMap<Player, String> selection = new HashMap<>();
     private static File playerdata;
 
     @EventHandler
@@ -31,20 +31,15 @@ public class DeleteHome implements Listener {
         if (event.getClickedInventory().equals(InventoryClickListener.homedelete)) {
             event.setCancelled(true);
             if (event.getSlot() == 2) {
-                String path = "homes." + homedeletion.get(p);
-                if (Config.getConfiguration(playerdata).get(path) != null) {
-                    Config.getConfiguration(playerdata).set(path, null);
-                    Config.saveFile(Config.getConfiguration(playerdata), playerdata);
-                } else {
-                    System.out.println("NOT EXISTING");
-                }
-                homedeletion.remove(p);
+                String path = "homes." + selection.get(p);
+                Config.set(Config.getConfiguration(playerdata), playerdata, path, null);
+                selection.remove(p);
                 p.sendMessage("§3§lHOMES §7| §aSucessfully deleted home.");
                 p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
                 p.closeInventory();
             } else if (event.getSlot() == 6) {
                 p.closeInventory();
-                homedeletion.remove(p);
+                selection.remove(p);
                 p.sendMessage("§3§lHOMES §7| §aSucessfully cancelled action.");
             }
         }

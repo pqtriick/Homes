@@ -29,7 +29,6 @@ public final class Homes extends JavaPlugin {
         //Jump to home
         //Delete home
         //add home
-        //delete home acceptation hashmap inv
         //Admin all homes view
 
 

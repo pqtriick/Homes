@@ -33,7 +33,7 @@ public class InventoryClickListener implements Listener {
         }
         if (event.getClickedInventory().getItem(event.getSlot()) != null) {
             if (event.getClick() == ClickType.RIGHT) {
-                DeleteHome.homedeletion.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
+                DeleteHome.selection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
                 homedelete= Bukkit.createInventory(null, 9, "§cDelete Home");
                 for (int i = 0; i <= 8; i++) {
                     homedelete.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
@@ -41,7 +41,7 @@ public class InventoryClickListener implements Listener {
                 homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), "§aDelete Home", "§7➥ §eClick to delete"));
                 homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), "§cCancel", "§7➥ §eClick to cancel"));
                 p.openInventory(homedelete);
-                System.out.println(DeleteHome.homedeletion.get(p));
+                System.out.println(DeleteHome.selection.get(p));
             }
 
         }
@@ -51,8 +51,8 @@ public class InventoryClickListener implements Listener {
     public void onInventoryQuit(InventoryCloseEvent event) {
         Player p = (Player) event.getPlayer();
         if (event.getInventory().equals(homedelete)) {
-            if (DeleteHome.homedeletion.containsKey(p)) {
-                DeleteHome.homedeletion.remove(p);
+            if (DeleteHome.selection.containsKey(p)) {
+                DeleteHome.selection.remove(p);
             }
 
         }

@@ -19,10 +19,9 @@ public class ConfigValues {
             if (Config.getConfiguration(file).get("homes." + name) != null) {
                 System.out.println("Already exists");
             } else {
-                Config.setDefaults(Config.getConfiguration(file), file, "homes." + name + ".X", String.valueOf(x));
-                Config.setDefaults(Config.getConfiguration(file), file, "homes." + name + ".Y", String.valueOf(y));
-                Config.setDefaults(Config.getConfiguration(file), file, "homes." + name + ".Z", String.valueOf(z));
-                Config.saveFile(Config.getConfiguration(file), file);
+                Config.set(Config.getConfiguration(file), file, "homes." + name + ".X", String.valueOf(x));
+                Config.set(Config.getConfiguration(file), file, "homes." + name + ".Y", String.valueOf(y));
+                Config.set(Config.getConfiguration(file), file, "homes." + name + ".Z", String.valueOf(z));
             }
         }
     }
