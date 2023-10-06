@@ -1,4 +1,4 @@
-package de.pqtriick.homes.commands;
+package de.pqtriick.homes.commands.player;
 
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.homes.ConfigValues;
@@ -20,10 +20,10 @@ public class testin implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length==0) {
+        if (args.length==1) {
             Player p = (Player) sender;
             playerfile = new File(Homes.getInstance().getDataFolder().getPath(), p.getUniqueId() + ".yml");
-            ConfigValues.saveLocation("Home1", 2.0, 5, 10, playerfile);
+            ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), playerfile);
 
         }
         return false;

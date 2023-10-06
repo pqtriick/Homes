@@ -8,3 +8,5 @@ description: Set custom homes
 
 commands:
   testin:
+  homes:
+  checkhomes:
