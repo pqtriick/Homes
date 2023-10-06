@@ -24,6 +24,7 @@ import org.bukkit.inventory.Inventory;
 public class InventoryClickListener implements Listener {
 
     public static Inventory homedelete;
+    public static Inventory otherfeatures;
 
     @EventHandler
     public void onInvClick(InventoryClickEvent event) {
@@ -32,8 +33,8 @@ public class InventoryClickListener implements Listener {
             event.setCancelled(true);
         }
         if (event.getClickedInventory().getItem(event.getSlot()) != null) {
+            DeleteHome.selection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
             if (event.getClick() == ClickType.RIGHT) {
-                DeleteHome.selection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
                 homedelete= Bukkit.createInventory(null, 9, "§cDelete Home");
                 for (int i = 0; i <= 8; i++) {
                     homedelete.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
@@ -41,7 +42,16 @@ public class InventoryClickListener implements Listener {
                 homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), "§aDelete Home", "§7➥ §eClick to delete"));
                 homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), "§cCancel", "§7➥ §eClick to cancel"));
                 p.openInventory(homedelete);
-                System.out.println(DeleteHome.selection.get(p));
+            } else if (event.getClick() == ClickType.LEFT) {
+                otherfeatures= Bukkit.createInventory(null, 9, "§3Home Features");
+                for (int i = 0; i <= 8; i++) {
+                    otherfeatures.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
+                }
+                otherfeatures.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), "§dTeleport to Home", "§7➥ §dClick to teleport"));
+                otherfeatures.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), "§6Navigation", "§7➥ §6Click to Navigate to home"));
+                p.openInventory(otherfeatures);
+
+
             }
 
         }
@@ -50,13 +60,13 @@ public class InventoryClickListener implements Listener {
     @EventHandler
     public void onInventoryQuit(InventoryCloseEvent event) {
         Player p = (Player) event.getPlayer();
-        if (event.getInventory().equals(homedelete)) {
+        if (event.getInventory().equals(homedelete) || event.getInventory().equals(otherfeatures)) {
             if (DeleteHome.selection.containsKey(p)) {
                 DeleteHome.selection.remove(p);
             }
-
         }
     }
+
 
 
 }
