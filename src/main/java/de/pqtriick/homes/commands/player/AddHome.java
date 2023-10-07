@@ -40,10 +40,11 @@ public class AddHome implements CommandExecutor {
                         p.sendMessage(PREFIX + HOMEEXISTS);
                     } else {
                         ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), file);
-                        ADDSUCESS = PREFIX.replace("&", "§");
-                        ADDSUCESS = PREFIX.replace("%homename%", args[0]);
+                        ADDSUCESS = ADDSUCESS.replace("&", "§");
+                        ADDSUCESS = ADDSUCESS.replace("%homename%", args[0]);
                         p.sendMessage(PREFIX + ADDSUCESS);
                         p.sendMessage(PREFIX + ADDINFO);
+                        ADDSUCESS = ADDSUCESS.replace(args[0], "%homename%");
                     }
                 }
             } else {
