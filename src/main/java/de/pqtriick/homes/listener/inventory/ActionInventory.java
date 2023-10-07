@@ -2,6 +2,7 @@ package de.pqtriick.homes.listener.inventory;
 
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
+import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.listener.compass.NavigationScheduler;
 import de.pqtriick.homes.utils.ItemBuilder;
 import org.bukkit.Bukkit;
@@ -32,11 +33,18 @@ public class ActionInventory implements Listener {
     private double z;
     public static Location newloc;
     private ItemStack navigator;
+    private static String TELEPORT = Messages.msgconfig.getString("messages.teleport");
+    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
+    private static String COMPASSDESC = Messages.msgconfig.getString("messages.compassdesc");
+    private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
         playerdata = new File(Homes.getInstance().getDataFolder().getPath(), p.getUniqueId() + ".yml");
+        TELEPORT = TELEPORT.replace("&", "§");
+        PREFIX = PREFIX.replace("&", "§");
+        NOPERM = NOPERM.replace("&", "§");
         if (event.getClickedInventory().equals(MainInventoryClick.homeactions)) {
             if (event.getSlot() == 2) {
                 if (p.hasPermission("homes.teleport")) {
@@ -46,10 +54,12 @@ public class ActionInventory implements Listener {
                     z = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Z")));
                     newloc = new Location(Bukkit.getWorld("world"), x, y, z);
                     p.teleport(newloc);
-                    p.sendMessage("§3§lHOMES §7| §aSucessfully teleported to home!");
+                    p.sendMessage(PREFIX + TELEPORT);
                     p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 2);
                     p.closeInventory();
                     MainInventoryClick.homeselection.remove(p);
+                } else {
+                    p.sendMessage(NOPERM);
                 }
             } else if(event.getSlot() == 6){
                 if (p.hasPermission("homes.navigate")) {
@@ -58,11 +68,15 @@ public class ActionInventory implements Listener {
                     y = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Y")));
                     z = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Z")));
                     newloc = new Location(Bukkit.getWorld("world"), x, y, z);
-                    navigator = new ItemBuilder(Material.COMPASS).setName("§cNavigator").setLore("§7➥ §6Currently navigating to§7: §e" + MainInventoryClick.homeselection.get(p)).build();
+                    COMPASSDESC = COMPASSDESC.replace("&", "§");
+                    COMPASSDESC = COMPASSDESC.replace("%homename%", MainInventoryClick.homeselection.get(p));
+                    navigator = new ItemBuilder(Material.COMPASS).setName("§cNavigator").setLore(COMPASSDESC).build();
                     p.getInventory().addItem(navigator);
                     p.closeInventory();
                     p.setCompassTarget(newloc);
                     NavigationScheduler.navigation.put(p, newloc);
+                } else {
+                    p.sendMessage(NOPERM);
                 }
 
             } else {

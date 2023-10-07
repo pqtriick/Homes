@@ -1,6 +1,7 @@
 package de.pqtriick.homes.listener.compass;
 
 import de.pqtriick.homes.Homes;
+import de.pqtriick.homes.files.Messages;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -24,6 +25,8 @@ public class NavigationScheduler {
     public static HashMap<Player, Location> navigation = new HashMap<>();
     private static double distance;
     private static boolean running;
+    private static String REACHEDHOME = Messages.msgconfig.getString("messages.reachedhome");
+    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
 
     public static void startScheduler() {
         if (running) {
@@ -40,7 +43,9 @@ public class NavigationScheduler {
                         all.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
                         if (all.getLocation().distanceSquared(navigation.get(all)) <= 25) {
                             navigation.remove(all);
-                            all.sendMessage("§3§lHOMES §7| §bYou have reached your home!");
+                            REACHEDHOME = REACHEDHOME.replace("&", "§");
+                            PREFIX = PREFIX.replace("&", "§");
+                            all.sendMessage(PREFIX + REACHEDHOME);
                             all.getInventory().remove(Material.COMPASS);
                         }
 

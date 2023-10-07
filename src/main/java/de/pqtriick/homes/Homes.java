@@ -3,6 +3,7 @@ package de.pqtriick.homes;
 import de.pqtriick.homes.commands.player.AddHome;
 import de.pqtriick.homes.commands.player.Homecommand;
 import de.pqtriick.homes.files.Config;
+import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.listener.compass.NavigationScheduler;
 import de.pqtriick.homes.listener.initalizer.JoinConfig;
 import de.pqtriick.homes.listener.inventory.ActionInventory;
@@ -19,6 +20,7 @@ public final class Homes extends JavaPlugin {
     public void onEnable() {
         instance = this;
         Config.createDir();
+        Messages.initMessageFile();
 
         Bukkit.getPluginManager().registerEvents(new JoinConfig(), this);
         Bukkit.getPluginManager().registerEvents(new MainInventoryClick(), this);

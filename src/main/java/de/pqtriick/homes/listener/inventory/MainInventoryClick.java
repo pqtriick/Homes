@@ -1,5 +1,6 @@
 package de.pqtriick.homes.listener.inventory;
 
+import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.utils.ItemBuilder;
 import de.pqtriick.homes.utils.Skull.SkullBuilder;
 import de.pqtriick.homes.utils.Skull.Skulls;
@@ -15,6 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
+
 import java.util.HashMap;
 
 /**
@@ -27,9 +29,25 @@ public class MainInventoryClick implements Listener {
     public static HashMap<Player, String> homeselection = new HashMap<>();
     public static Inventory homedelete;
     public static Inventory homeactions;
+    private static String GUIDELHOME = Messages.msgconfig.getString("messages.guidelhome");
+    private static String GUIDELHOMELORE = Messages.msgconfig.getString("messages.guidelhomelore");
+    private static String GUICANCELACTION = Messages.msgconfig.getString("messages.guicancelaction");
+    private static String GUICANCELACTIONLORE = Messages.msgconfig.getString("messages.guicancelactionlore");
+    private static String GUITPHOME = Messages.msgconfig.getString("messages.guitphome");
+    private static String GUITPHOMELORE = Messages.msgconfig.getString("messages.guitphomelore");
+    private static String GUINAVIGATION = Messages.msgconfig.getString("messages.guinavigation");
+    private static String GUINAVIGATIONLORE = Messages.msgconfig.getString("messages.guinavigationlore");
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
+        GUIDELHOME = GUIDELHOME.replace("&", "§");
+        GUIDELHOMELORE = GUIDELHOMELORE.replace("&", "§");
+        GUICANCELACTION = GUICANCELACTION.replace("&", "§");
+        GUICANCELACTIONLORE = GUICANCELACTIONLORE.replace("&", "§");
+        GUITPHOME = GUITPHOME.replace("&", "§");
+        GUITPHOMELORE = GUITPHOMELORE.replace("&", "§");
+        GUINAVIGATION = GUINAVIGATION.replace("&", "§");
+        GUINAVIGATIONLORE = GUINAVIGATIONLORE.replace("&", "§");
         Player p = (Player) event.getWhoClicked();
         if (event.getInventory().equals(homedelete)) {
             event.setCancelled(true);
@@ -41,8 +59,8 @@ public class MainInventoryClick implements Listener {
                     for (int i = 0; i <= 8; i++) {
                         homedelete.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
                     }
-                    homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), "§aDelete home", "§7➥ §aClick to delete"));
-                    homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), "§cCancel action", "§7➥ §cClick to cancel"));
+                    homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), GUIDELHOME, GUIDELHOMELORE));
+                    homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), GUICANCELACTION, GUICANCELACTIONLORE));
                     p.openInventory(homedelete);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
                 }
@@ -53,8 +71,8 @@ public class MainInventoryClick implements Listener {
                     for (int i = 0; i <= 8; i++) {
                         homeactions.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
                     }
-                    homeactions.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), "§dTeleport to home", "§7➥ §dClick to teleport"));
-                    homeactions.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), "§6Navigate to home", "§7➥ §6Click to navigate"));
+                    homeactions.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), GUITPHOME, GUITPHOMELORE));
+                    homeactions.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), GUINAVIGATION, GUINAVIGATIONLORE));
                     p.openInventory(homeactions);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
                 }
