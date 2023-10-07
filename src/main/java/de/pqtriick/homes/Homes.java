@@ -1,6 +1,5 @@
 package de.pqtriick.homes;
 
-import de.pqtriick.homes.commands.admin.CheckHomes;
 import de.pqtriick.homes.commands.player.AddHome;
 import de.pqtriick.homes.commands.player.Homecommand;
 import de.pqtriick.homes.files.Config;
@@ -28,7 +27,6 @@ public final class Homes extends JavaPlugin {
 
         this.getCommand("addhome").setExecutor(new AddHome());
         this.getCommand("homes").setExecutor(new Homecommand());
-        this.getCommand("checkhomes").setExecutor(new CheckHomes());
         NavigationScheduler.startScheduler();
 
 

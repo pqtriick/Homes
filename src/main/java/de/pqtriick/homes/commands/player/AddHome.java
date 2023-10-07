@@ -27,9 +27,11 @@ public class AddHome implements CommandExecutor {
                 file = new File(Homes.getInstance().getDataFolder().getPath(), p.getUniqueId() + ".yml");
                 if (Config.userfileExists(file)) {
                     if (Config.getConfiguration(file).get("homes." + args[0]) != null) {
-                        p.sendMessage("§3§lHOMES §7| §cThis home already exists in your list fo homes.");
+                        p.sendMessage("§3§lHOMES §7| §cThis home already exists in your list of homes.");
                     } else {
                         ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), file);
+                        p.sendMessage("§3§lHOMES §7| §aSucessfully added §e" + args[0] + " §ato your homes.");
+                        p.sendMessage("§3§lHOMES §7| §eAccess your homes with /homes");
                     }
                 }
             }

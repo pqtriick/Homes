@@ -38,7 +38,7 @@ public class NavigationScheduler {
                         distance = all.getLocation().distanceSquared(navigation.get(all));
                         String message = "§6" + Math.round(Math.sqrt(distance)) + "§6m";
                         all.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-                        if (all.getLocation().distanceSquared(navigation.get(all)) <= 3) {
+                        if (all.getLocation().distanceSquared(navigation.get(all)) <= 25) {
                             navigation.remove(all);
                             all.sendMessage("§3§lHOMES §7| §bYou have reached your home!");
                             all.getInventory().remove(Material.COMPASS);

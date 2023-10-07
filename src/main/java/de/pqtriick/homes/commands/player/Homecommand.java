@@ -33,7 +33,7 @@ public class Homecommand implements CommandExecutor {
         if (player.hasPermission("homes.use")) {
             invnumber = 0;
             for (String homes : Config.getConfiguration(playerstorage).getConfigurationSection("homes").getKeys(false)) {
-                homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, "§7➥ §aLeftclick to access\n§7➥ §cRightclick to delete"));
+                homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, "§7➥ §aLeftclick to access","§7➥ §cRightclick to delete"));
                 invnumber++;
             }
             player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 2);
