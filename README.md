@@ -19,8 +19,8 @@ This plugin allows you to:
   
 ## Commands:
 
-/addhome [Name] | Add home
-/homes | Open the main GUI with all features
+* /addhome [Name] | Add home
+* /homes | Open the main GUI with all features
 
 # Config
 * Currently only config support for saving data because there is no need for db.
