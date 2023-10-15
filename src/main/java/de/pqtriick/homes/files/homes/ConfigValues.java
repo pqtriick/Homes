@@ -1,7 +1,9 @@
 package de.pqtriick.homes.files.homes;
 
 import de.pqtriick.homes.files.Config;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.io.File;
 
@@ -12,9 +14,8 @@ import java.io.File;
 
 public class ConfigValues {
 
-    private static int amt;
 
-    public static void saveLocation(String name, double x, double y, double z, File file) {
+    public static void saveLocation(String name, double x, double y, double z, World world, File file) {
         if (Config.userfileExists(file)) {
             if (Config.getConfiguration(file).get("homes." + name) != null) {
                 System.out.println("Already exists");
@@ -22,22 +23,10 @@ public class ConfigValues {
                 Config.set(Config.getConfiguration(file), file, "homes." + name + ".X", String.valueOf(x));
                 Config.set(Config.getConfiguration(file), file, "homes." + name + ".Y", String.valueOf(y));
                 Config.set(Config.getConfiguration(file), file, "homes." + name + ".Z", String.valueOf(z));
+                Config.set(Config.getConfiguration(file), file, "homes." + name + ".world", world.getName());
             }
         }
     }
 
 
-    public static int getHomeAmount(File file) {
-        if (Config.userfileExists(file)) {
-            amt = (int) Config.getConfiguration(file).get("amount");
-        }
-        return amt;
-    }
-
-    public static void addHomeAmount(File file, int amount) {
-        if (Config.userfileExists(file)) {
-            Config.setDefaults(Config.getConfiguration(file), file, "amount", Integer.toString(amount));
-            Config.saveFile(Config.getConfiguration(file), file);
-        }
-    }
 }
