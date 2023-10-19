@@ -52,7 +52,6 @@ public class ActionInventory implements Listener {
                     z = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Z")));
                     world = Bukkit.getWorld(Config.getConfiguration(playerdata).getString(path + ".world"));
                     newloc = new Location(world, x, y, z);
-                    System.out.println(newloc);
                     p.teleport(newloc);
                     p.sendMessage(PREFIX + TELEPORT);
                     p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 2);

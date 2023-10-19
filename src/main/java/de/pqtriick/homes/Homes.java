@@ -1,5 +1,6 @@
 package de.pqtriick.homes;
 
+import de.pqtriick.homes.commands.admin.CheckHomes;
 import de.pqtriick.homes.commands.player.AddHome;
 import de.pqtriick.homes.commands.player.Homecommand;
 import de.pqtriick.homes.files.Config;
@@ -8,6 +9,7 @@ import de.pqtriick.homes.listener.compass.NavigationScheduler;
 import de.pqtriick.homes.listener.initalizer.JoinConfig;
 import de.pqtriick.homes.listener.initalizer.VersionInform;
 import de.pqtriick.homes.listener.inventory.ActionInventory;
+import de.pqtriick.homes.listener.inventory.AdminInventory;
 import de.pqtriick.homes.listener.inventory.DeleteInventory;
 import de.pqtriick.homes.listener.inventory.MainInventoryClick;
 import de.pqtriick.homes.utils.Update.VersionCheck;
@@ -30,9 +32,11 @@ public final class Homes extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DeleteInventory(), this);
         Bukkit.getPluginManager().registerEvents(new ActionInventory(), this);
         Bukkit.getPluginManager().registerEvents(new VersionInform(), this);
+        Bukkit.getPluginManager().registerEvents(new AdminInventory(), this);
 
         this.getCommand("addhome").setExecutor(new AddHome());
         this.getCommand("homes").setExecutor(new Homecommand());
+        this.getCommand("checkhomes").setExecutor(new CheckHomes());
         NavigationScheduler.startScheduler();
 
         checkUpdate();
