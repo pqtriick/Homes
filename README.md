@@ -8,6 +8,7 @@ This plugin allows you to:
 * Delete custom homes
 * Teleport to homes
 * Navigation via compass to home
+* Create homes in other dimensions and / or worlds
 * Everything GUI based
 
 ## Permissions:
@@ -16,6 +17,7 @@ This plugin allows you to:
 * homes.use | To use the GUI Features
 * homes.teleport | To use the teleport feature
 * homes.navigate | To use the navigation feature
+* homes.admin | For other information like version control etc.
   
 ## Commands:
 
@@ -31,6 +33,7 @@ homes:
     X: '174.78694353928665'
     Y: '65.0'
     Z: '-150.7085900761925'
+    world: 'world'
 ```
 
 Homes can also be added via writing into the Config, however it could cause an error.
