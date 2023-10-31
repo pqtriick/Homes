@@ -23,6 +23,7 @@ This plugin allows you to:
 
 * /addhome [Name] | Add home
 * /homes | Open the main GUI with all features
+* /checkhomes [Player] | View homes of a player (Even Offlineplayers!) and delete / teleport to it.
 
 # Config
 * Currently only config support for saving data because there is no need for db.
