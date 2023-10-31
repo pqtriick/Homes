@@ -7,7 +7,7 @@ This plugin allows you to:
 * Add up to 45 homes per player
 * Delete custom homes
 * Teleport to homes
-* Navigation via compass to home
+* Navigation via compass to home with additional particles
 * Create homes in other dimensions and / or worlds
 * Everything GUI based
 
@@ -24,6 +24,7 @@ This plugin allows you to:
 * /addhome [Name] | Add home
 * /homes | Open the main GUI with all features
 * /checkhomes [Player] | View homes of a player (Even Offlineplayers!) and delete / teleport to it.
+* /reloadvalues | Reload values from the options file.
 
 # Config
 * Currently only config support for saving data because there is no need for db.
