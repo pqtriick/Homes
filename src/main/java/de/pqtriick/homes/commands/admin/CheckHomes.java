@@ -44,7 +44,7 @@ public class CheckHomes implements CommandExecutor {
                     player.sendMessage(PREFIX + "§cThis user is not known by the plugin.");
                     return true;
                 }
-                if(Config.getConfiguration(playerstorage).get("homes") == null) {
+                if (Config.getConfiguration(playerstorage).get("homes") == null) {
                     player.sendMessage(PREFIX + "§cThis user doesn't have any homes.");
                     return true;
                 }
@@ -78,3 +78,5 @@ public class CheckHomes implements CommandExecutor {
         }
     }
 }
+
+

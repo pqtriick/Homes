@@ -2,6 +2,7 @@ package de.pqtriick.homes.listener.compass;
 
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Messages;
+import de.pqtriick.homes.files.Options;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -9,6 +10,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -27,6 +29,10 @@ public class NavigationScheduler {
     private static boolean running;
     private static String REACHEDHOME = Messages.msgconfig.getString("messages.reachedhome");
     private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
+    public static String enabled = Options.optionsconfig.getString("options.particle.enabled");
+    public static Particle particle = Particle.valueOf(Options.optionsconfig.getString("options.particle.particle"));
+    public static String delay = Options.optionsconfig.getString("options.particle.delay");
+
 
     public static void startScheduler() {
         if (running) {
@@ -41,7 +47,10 @@ public class NavigationScheduler {
                         distance = all.getLocation().distanceSquared(navigation.get(all));
                         String message = "§6" + Math.round(Math.sqrt(distance)) + "§6m";
                         all.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-                        if (all.getLocation().distanceSquared(navigation.get(all)) <= 25) {
+                        if (enabled.equalsIgnoreCase("TRUE")) {
+                            circle(navigation.get(all), all, particle);
+                        }
+                        if (all.getLocation().distanceSquared(navigation.get(all)) <= 2) {
                             navigation.remove(all);
                             REACHEDHOME = REACHEDHOME.replace("&", "§");
                             PREFIX = PREFIX.replace("&", "§");
@@ -52,6 +61,19 @@ public class NavigationScheduler {
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(Homes.getInstance(), 0, 10 * 1);
+        }.runTaskTimerAsynchronously(Homes.getInstance(), 0, Integer.parseInt(delay));
     }
+
+    private static void circle(Location loc, Player player, Particle particle) {
+        Location spawner = loc;
+        for (double i=0; i< Math.PI*2; i+=0.1) {
+            double x = Math.cos(i);
+            double z = Math.sin(i);
+            player.spawnParticle(particle, loc.getX()+x, spawner.getY(), spawner.getZ()+z, 0, 0, 0, 0);
+
+        }
+
+    }
+
+
 }

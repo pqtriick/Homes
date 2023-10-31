@@ -10,3 +10,4 @@ commands:
   addhome:
   homes:
   checkhomes:
+  reloadvalues:
