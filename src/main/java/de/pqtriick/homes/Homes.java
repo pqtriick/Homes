@@ -15,14 +15,16 @@ import de.pqtriick.homes.listener.inventory.AdminInventory;
 import de.pqtriick.homes.listener.inventory.DeleteInventory;
 import de.pqtriick.homes.listener.inventory.MainInventoryClick;
 import de.pqtriick.homes.utils.Update.VersionCheck;
+import de.pqtriick.homes.utils.bstats.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.Particle;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Homes extends JavaPlugin {
 
     public static Homes instance;
     public static boolean hasUpdate;
+    private static int bstatsid = 20215;
 
     @Override
     public void onEnable() {
@@ -43,8 +45,9 @@ public final class Homes extends JavaPlugin {
         this.getCommand("checkhomes").setExecutor(new CheckHomes());
         this.getCommand("reloadvalues").setExecutor(new ReloadValues());
         NavigationScheduler.startScheduler();
-
         checkUpdate();
+        Metrics metrics = new Metrics(this, bstatsid);
+
 
 
 
@@ -69,4 +72,5 @@ public final class Homes extends JavaPlugin {
         });
         return hasUpdate;
     }
+
 }
