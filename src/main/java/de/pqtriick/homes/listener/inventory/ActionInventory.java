@@ -67,14 +67,19 @@ public class ActionInventory implements Listener {
                     y = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Y")));
                     z = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Z")));
                     world = Bukkit.getWorld(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".world")));
-                    newloc = new Location(world, x, y, z);
-                    COMPASSDESC = COMPASSDESC.replace("&", "§");
-                    COMPASSDESC = COMPASSDESC.replace("%homename%", MainInventoryClick.homeselection.get(p));
-                    navigator = new ItemBuilder(Material.COMPASS).setName("§cNavigator").setLore(COMPASSDESC).build();
-                    p.getInventory().addItem(navigator);
-                    p.closeInventory();
-                    p.setCompassTarget(newloc);
-                    NavigationScheduler.navigation.put(p, newloc);
+                    if (p.getWorld() == world) {
+                        newloc = new Location(world, x, y, z);
+                        COMPASSDESC = COMPASSDESC.replace("&", "§");
+                        COMPASSDESC = COMPASSDESC.replace("%homename%", MainInventoryClick.homeselection.get(p));
+                        navigator = new ItemBuilder(Material.COMPASS).setName("§cNavigator").setLore(COMPASSDESC).build();
+                        p.getInventory().addItem(navigator);
+                        p.closeInventory();
+                        p.setCompassTarget(newloc);
+                        NavigationScheduler.navigation.put(p, newloc);
+                    } else {
+                        p.closeInventory();
+                        p.sendMessage(PREFIX + " §cYou have to be in the same world, to navigate to the location!");
+                    }
                 } else {
                     p.sendMessage(NOPERM);
                 }

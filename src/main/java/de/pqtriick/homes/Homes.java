@@ -17,6 +17,7 @@ import de.pqtriick.homes.listener.inventory.MainInventoryClick;
 import de.pqtriick.homes.utils.Update.VersionCheck;
 import de.pqtriick.homes.utils.bstats.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.Particle;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
