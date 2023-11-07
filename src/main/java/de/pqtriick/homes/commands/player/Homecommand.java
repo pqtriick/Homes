@@ -40,7 +40,7 @@ public class Homecommand implements CommandExecutor {
         if (player.hasPermission("homes.use")) {
             invnumber = 0;
             for (String homes : Config.getConfiguration(playerstorage).getConfigurationSection("homes").getKeys(false)) {
-                homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, LEFTCLICK,RIGHTCLICK));
+                homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, LEFTCLICK, RIGHTCLICK));
                 invnumber++;
             }
             player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 2);

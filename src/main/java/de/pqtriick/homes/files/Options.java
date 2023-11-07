@@ -23,8 +23,11 @@ public class Options {
             optionsconfig.set("options.particle.particle", "FLAME");
             optionsconfig.set("options.particle.delay", "10");
             optionsconfig.set("options.particle.info","//All Available Particles: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html");
+            optionsconfig.set("options.homes.maxsize", "20");
             Config.saveFile(optionsconfig, optionsfile);
-
+        } else if (optionsconfig.get("options.homes.maxsize") == null) {
+            optionsconfig.set("options.homes.maxsize", "20");
+            Config.saveFile(optionsconfig, optionsfile);
 
         }
     }

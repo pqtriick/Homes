@@ -17,7 +17,6 @@ import de.pqtriick.homes.listener.inventory.MainInventoryClick;
 import de.pqtriick.homes.utils.Update.VersionCheck;
 import de.pqtriick.homes.utils.bstats.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.Particle;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -48,6 +47,9 @@ public final class Homes extends JavaPlugin {
         NavigationScheduler.startScheduler();
         checkUpdate();
         Metrics metrics = new Metrics(this, bstatsid);
+
+        //add max home size for individual players
+        //add multiple sites for homes
 
 
 

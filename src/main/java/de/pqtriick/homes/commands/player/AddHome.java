@@ -3,6 +3,7 @@ package de.pqtriick.homes.commands.player;
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
+import de.pqtriick.homes.files.Options;
 import de.pqtriick.homes.files.homes.ConfigValues;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,6 +25,8 @@ public class AddHome implements CommandExecutor {
     private static String ADDSUCESS = Messages.msgconfig.getString("messages.addsucess");
     private static String ADDINFO = Messages.msgconfig.getString("messages.addinfo");
     public static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
+    public static int maxhomes = Integer.parseInt(Options.optionsconfig.getString("options.homes.maxsize"));
+    private static int homeamount = 0;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -33,18 +36,26 @@ public class AddHome implements CommandExecutor {
         NOPERM = NOPERM.replace("&", "§");
         Player p = (Player) sender;
         if (args.length==1) {
+            homeamount = 0;
             if (p.hasPermission("homes.create")) {
                 file = new File(Homes.getInstance().getDataFolder().getPath(), p.getUniqueId() + ".yml");
                 if (Config.userfileExists(file)) {
                     if (Config.getConfiguration(file).get("homes." + args[0]) != null) {
                         p.sendMessage(PREFIX + HOMEEXISTS);
                     } else {
-                        ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), p.getWorld(), file);
-                        ADDSUCESS = ADDSUCESS.replace("&", "§");
-                        ADDSUCESS = ADDSUCESS.replace("%homename%", args[0]);
-                        p.sendMessage(PREFIX + ADDSUCESS);
-                        p.sendMessage(PREFIX + ADDINFO);
-                        ADDSUCESS = ADDSUCESS.replace(args[0], "%homename%");
+                        for (String homes : Config.getConfiguration(file).getConfigurationSection("homes").getKeys(false)) {
+                            homeamount++;
+                        }
+                        if (homeamount < maxhomes) {
+                            ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), p.getWorld(), file);
+                            ADDSUCESS = ADDSUCESS.replace("&", "§");
+                            ADDSUCESS = ADDSUCESS.replace("%homename%", args[0]);
+                            p.sendMessage(PREFIX + ADDSUCESS);
+                            p.sendMessage(PREFIX + ADDINFO);
+                            ADDSUCESS = ADDSUCESS.replace(args[0], "%homename%");
+                        } else {
+                            p.sendMessage(PREFIX + "§cYou have reached the maximum amount of homes.");
+                        }
                     }
                 }
             } else {
