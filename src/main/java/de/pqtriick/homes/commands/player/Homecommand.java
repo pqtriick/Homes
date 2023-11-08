@@ -28,23 +28,30 @@ public class Homecommand implements CommandExecutor {
     private static String LEFTCLICK = Messages.msgconfig.getString("messages.leftclick");
     private static String RIGHTCLICK = Messages.msgconfig.getString("messages.rightclick");
     private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
+    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         LEFTCLICK = LEFTCLICK.replace("&", "§");
         RIGHTCLICK = RIGHTCLICK.replace("&", "§");
         NOPERM = NOPERM.replace("&", "§");
+        PREFIX = PREFIX.replace("&", "§");
         Player player = (Player) sender;
         homeinv = Bukkit.createInventory(null, 9*5, "§3§lHomes");
         playerstorage = new File(Homes.getInstance().getDataFolder().getPath(), player.getUniqueId() + ".yml");
         if (player.hasPermission("homes.use")) {
             invnumber = 0;
-            for (String homes : Config.getConfiguration(playerstorage).getConfigurationSection("homes").getKeys(false)) {
-                homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, LEFTCLICK, RIGHTCLICK));
-                invnumber++;
+            if (Config.getConfiguration(playerstorage).getConfigurationSection("homes") != null) {
+                for (String homes : Config.getConfiguration(playerstorage).getConfigurationSection("homes").getKeys(false)) {
+                    homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, LEFTCLICK, RIGHTCLICK));
+                    invnumber++;
+                }
+                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 2);
+                player.openInventory(homeinv);
+            } else {
+                player.sendMessage(PREFIX + "§cYou don't have any homes!");
             }
-            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 2);
-            player.openInventory(homeinv);
+
         } else {
             player.sendMessage(NOPERM);
 

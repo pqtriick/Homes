@@ -43,8 +43,10 @@ public class AddHome implements CommandExecutor {
                     if (Config.getConfiguration(file).get("homes." + args[0]) != null) {
                         p.sendMessage(PREFIX + HOMEEXISTS);
                     } else {
-                        for (String homes : Config.getConfiguration(file).getConfigurationSection("homes").getKeys(false)) {
-                            homeamount++;
+                        if (Config.getConfiguration(file).getConfigurationSection("homes") != null) {
+                            for (String homes : Config.getConfiguration(file).getConfigurationSection("homes").getKeys(false)) {
+                                homeamount++;
+                            }
                         }
                         if (homeamount < maxhomes) {
                             ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), p.getWorld(), file);
