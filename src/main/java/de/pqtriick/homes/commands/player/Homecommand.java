@@ -3,9 +3,11 @@ package de.pqtriick.homes.commands.player;
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
+import de.pqtriick.homes.utils.ItemBuilder;
 import de.pqtriick.homes.utils.Skull.SkullBuilder;
 import de.pqtriick.homes.utils.Skull.Skulls;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,7 +45,11 @@ public class Homecommand implements CommandExecutor {
             invnumber = 0;
             if (Config.getConfiguration(playerstorage).getConfigurationSection("homes") != null) {
                 for (String homes : Config.getConfiguration(playerstorage).getConfigurationSection("homes").getKeys(false)) {
-                    homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, LEFTCLICK, RIGHTCLICK));
+                    try {
+                        homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, LEFTCLICK, RIGHTCLICK));
+                    } catch (Exception exe) {
+                        homeinv.setItem(invnumber, new ItemBuilder(Material.CHEST).setName("§e" + homes).setLore(LEFTCLICK).setLore(RIGHTCLICK).build());
+                    }
                     invnumber++;
                 }
                 player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 2);

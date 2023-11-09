@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 
 import java.util.HashMap;
@@ -59,8 +60,13 @@ public class MainInventoryClick implements Listener {
                     for (int i = 0; i <= 8; i++) {
                         homedelete.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
                     }
-                    homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), GUIDELHOME, GUIDELHOMELORE));
-                    homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), GUICANCELACTION, GUICANCELACTIONLORE));
+                    try {
+                        homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), GUIDELHOME, GUIDELHOMELORE));
+                        homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), GUICANCELACTION, GUICANCELACTIONLORE));
+                    } catch (Exception exe) {
+                        homedelete.setItem(2, new ItemBuilder(Material.LIME_CONCRETE).setName(GUIDELHOME).setLore(GUIDELHOMELORE).build());
+                        homedelete.setItem(6, new ItemBuilder(Material.RED_CONCRETE).setName(GUICANCELACTION).setLore(GUICANCELACTIONLORE).build());
+                    }
                     p.openInventory(homedelete);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
                 }
@@ -71,8 +77,13 @@ public class MainInventoryClick implements Listener {
                     for (int i = 0; i <= 8; i++) {
                         homeactions.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
                     }
-                    homeactions.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), GUITPHOME, GUITPHOMELORE));
-                    homeactions.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), GUINAVIGATION, GUINAVIGATIONLORE));
+                    try {
+                        homeactions.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), GUITPHOME, GUITPHOMELORE));
+                        homeactions.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), GUINAVIGATION, GUINAVIGATIONLORE));
+                    } catch (Exception exe) {
+                        homeactions.setItem(2, new ItemBuilder(Material.ENDER_EYE).setName(GUITPHOME).setLore(GUITPHOMELORE).build());
+                        homeactions.setItem(6, new ItemBuilder(Material.COMPASS).setName(GUINAVIGATION).setLore(GUINAVIGATIONLORE).build());
+                    }
                     p.openInventory(homeactions);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
                 }
