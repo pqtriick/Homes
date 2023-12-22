@@ -41,6 +41,7 @@ public class MainInventoryClick implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() == null) return;
         GUIDELHOME = GUIDELHOME.replace("&", "§");
         GUIDELHOMELORE = GUIDELHOMELORE.replace("&", "§");
         GUICANCELACTION = GUICANCELACTION.replace("&", "§");

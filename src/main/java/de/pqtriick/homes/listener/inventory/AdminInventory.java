@@ -35,6 +35,7 @@ public class AdminInventory implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() == null) return;
         TELEPORT = TELEPORT.replace("&", "§");
         PREFIX = PREFIX.replace("&", "§");
         HOMEDELETE = HOMEDELETE.replace("&", "§");
@@ -43,30 +44,31 @@ public class AdminInventory implements Listener {
         playerdata = new File(Homes.getInstance().getDataFolder().getPath(), CheckHomes.invName.get(player) + ".yml");
         if (event.getClickedInventory().equals(CheckHomes.checkhomes)) {
             event.setCancelled(true);
-            if (event.getClick().equals(ClickType.LEFT)) {
-                String path = "homes." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
-                System.out.println(path);
-                System.out.println(playerdata);
+            if (event.getCurrentItem() != null) {
+                if (event.getClick().equals(ClickType.LEFT)) {
+                    String path = "homes." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+                    System.out.println(path);
+                    System.out.println(playerdata);
 
-                x = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".X")));
-                y = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Y")));
-                z = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Z")));
-                world = Bukkit.getWorld(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".world")));
-                newloc = new Location(world, x, y, z);
-                player.teleport(newloc);
-                player.sendMessage(PREFIX + TELEPORT);
-                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 2);
-                player.closeInventory();
+                    x = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".X")));
+                    y = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Y")));
+                    z = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Z")));
+                    world = Bukkit.getWorld(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".world")));
+                    newloc = new Location(world, x, y, z);
+                    player.teleport(newloc);
+                    player.sendMessage(PREFIX + TELEPORT);
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 2);
+                    player.closeInventory();
 
-            } else if (event.getClick().equals(ClickType.RIGHT)) {
-                String path = "homes." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
-                Config.set(Config.getConfiguration(playerdata), playerdata, path, null);
-                player.sendMessage(PREFIX +  HOMEDELETE);
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
-                player.closeInventory();
+                } else if (event.getClick().equals(ClickType.RIGHT)) {
+                    String path = "homes." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+                    Config.set(Config.getConfiguration(playerdata), playerdata, path, null);
+                    player.sendMessage(PREFIX + HOMEDELETE);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
+                    player.closeInventory();
 
 
-
+                }
             }
         }
     }

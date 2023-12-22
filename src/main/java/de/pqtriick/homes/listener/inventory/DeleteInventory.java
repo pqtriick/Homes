@@ -25,6 +25,7 @@ public class DeleteInventory implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() == null) return;
         Player p = (Player) event.getWhoClicked();
         playerdata = new File(Homes.getInstance().getDataFolder().getPath(), p.getUniqueId() + ".yml");
         PREFIX = PREFIX.replace("&", "§");
