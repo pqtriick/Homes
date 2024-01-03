@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,9 @@ public class NavigationScheduler {
     public static String enabled = Options.optionsconfig.getString("options.particle.enabled");
     public static Particle particle = Particle.valueOf(Options.optionsconfig.getString("options.particle.particle"));
     public static String delay = Options.optionsconfig.getString("options.particle.delay");
+    public static String spacing = Options.optionsconfig.getString("options.navigation.particle.spacing");
+    public static String length = Options.optionsconfig.getString("options.navigation.particle.length");
+    public static Particle navigationparticle = Particle.valueOf(Options.optionsconfig.getString("options.navigation.particle.particle"));
 
 
     public static void startScheduler() {
@@ -49,6 +53,7 @@ public class NavigationScheduler {
                         all.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
                         if (enabled.equalsIgnoreCase("TRUE")) {
                             circle(navigation.get(all), all, particle);
+                            drawLine(navigation.get(all), all, navigationparticle);
                         }
                         if (all.getLocation().distanceSquared(navigation.get(all)) <= 2) {
                             navigation.remove(all);
@@ -72,6 +77,24 @@ public class NavigationScheduler {
             player.spawnParticle(particle, loc.getX()+x, spawner.getY(), spawner.getZ()+z, 0, 0, 0, 0);
 
         }
+
+    }
+
+    private static void drawLine(Location loc, Player player, Particle particle) {
+        Location playerloc = player.getLocation();
+        Vector projection = loc.toVector().subtract(playerloc.toVector());
+        for (double i = 0.5; i < Integer.parseInt(length); i+=Double.parseDouble(spacing)) {
+            projection.multiply(i);
+            playerloc.add(projection);
+            player.spawnParticle(particle, playerloc.getX(), playerloc.getY()+0.5, playerloc.getZ(), 0, 0, 0, 0);
+            playerloc.subtract(projection);
+            projection.normalize();
+
+
+        }
+
+
+
 
     }
 

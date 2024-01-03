@@ -70,12 +70,7 @@ public class ActionInventory implements Listener {
                     world = Bukkit.getWorld(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".world")));
                     if (p.getWorld() == world) {
                         newloc = new Location(world, x, y, z);
-                        COMPASSDESC = COMPASSDESC.replace("&", "§");
-                        COMPASSDESC = COMPASSDESC.replace("%homename%", MainInventoryClick.homeselection.get(p));
-                        navigator = new ItemBuilder(Material.COMPASS).setName("§cNavigator").setLore(COMPASSDESC).build();
-                        p.getInventory().addItem(navigator);
                         p.closeInventory();
-                        p.setCompassTarget(newloc);
                         NavigationScheduler.navigation.put(p, newloc);
                     } else {
                         p.closeInventory();
@@ -95,14 +90,6 @@ public class ActionInventory implements Listener {
     public void onCompassDrop(PlayerDropItemEvent event) {
         if (event.getItemDrop().getItemStack().equals(Material.COMPASS)) {
             event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        NavigationScheduler.navigation.remove(event.getPlayer());
-        if (event.getPlayer().getInventory().contains(Material.COMPASS)) {
-            event.getPlayer().getInventory().remove(Material.COMPASS);
         }
     }
 }
