@@ -1,6 +1,7 @@
 package de.pqtriick.homes.listener.inventory;
 
 import de.pqtriick.homes.Homes;
+import de.pqtriick.homes.commands.player.Homecommand;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.utils.ItemBuilder;
@@ -37,17 +38,18 @@ public class MultipleSiteInventory implements Listener {
         NOPERM = NOPERM.replace("&", "§");
         PREFIX = PREFIX.replace("&", "§");
         if (event.getClickedInventory() == null) return;
-        if (event.getCurrentItem()== null) return;
-        event.setCancelled(true);
+        if (event.getCurrentItem() == null) return;
         Player player = (Player) event.getWhoClicked();
-        if (event.getCurrentItem().getType().equals(Material.LIME_STAINED_GLASS_PANE)) {
-            player.closeInventory();
-            player.openInventory(homesiteinv);
-            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 2);
-        } else if (event.getCurrentItem().getType().equals(Material.RED_STAINED_GLASS_PANE)) {
-            player.closeInventory();
-            player.performCommand("homes");
-
+        if (event.getClickedInventory().equals(Homecommand.homeinv) || event.getClickedInventory().equals(homesiteinv)) {
+            event.setCancelled(true);
+            if (event.getCurrentItem().getType().equals(Material.LIME_STAINED_GLASS_PANE)) {
+                player.closeInventory();
+                player.openInventory(homesiteinv);
+                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 2);
+            } else if (event.getCurrentItem().getType().equals(Material.RED_STAINED_GLASS_PANE)) {
+                player.closeInventory();
+                player.performCommand("homes");
+            }
         }
     }
 
