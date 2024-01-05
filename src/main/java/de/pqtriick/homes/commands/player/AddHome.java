@@ -22,7 +22,7 @@ public class AddHome implements CommandExecutor {
     private static File file;
     private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
     private static String HOMEEXISTS = Messages.msgconfig.getString("messages.homeexists");
-    private static String ADDSUCESS = Messages.msgconfig.getString("messages.addsucess");
+    private static String ADDSUCESS;
     private static String ADDINFO = Messages.msgconfig.getString("messages.addinfo");
     public static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
     public static int maxhomes = Integer.parseInt(Options.optionsconfig.getString("options.homes.maxsize"));
@@ -50,11 +50,11 @@ public class AddHome implements CommandExecutor {
                         }
                         if (homeamount < maxhomes) {
                             ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), p.getWorld(), file);
+                            ADDSUCESS = Messages.msgconfig.getString("messages.addsucess");
                             ADDSUCESS = ADDSUCESS.replace("&", "§");
                             ADDSUCESS = ADDSUCESS.replace("%homename%", args[0]);
                             p.sendMessage(PREFIX + ADDSUCESS);
                             p.sendMessage(PREFIX + ADDINFO);
-                            ADDSUCESS = ADDSUCESS.replace(args[0], "%homename%");
                         } else {
                             p.sendMessage(PREFIX + "§cYou have reached the maximum amount of homes.");
                         }

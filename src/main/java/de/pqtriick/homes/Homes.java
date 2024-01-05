@@ -10,10 +10,7 @@ import de.pqtriick.homes.files.Options;
 import de.pqtriick.homes.listener.compass.NavigationScheduler;
 import de.pqtriick.homes.listener.initalizer.JoinConfig;
 import de.pqtriick.homes.listener.initalizer.VersionInform;
-import de.pqtriick.homes.listener.inventory.ActionInventory;
-import de.pqtriick.homes.listener.inventory.AdminInventory;
-import de.pqtriick.homes.listener.inventory.DeleteInventory;
-import de.pqtriick.homes.listener.inventory.MainInventoryClick;
+import de.pqtriick.homes.listener.inventory.*;
 import de.pqtriick.homes.utils.Update.VersionCheck;
 import de.pqtriick.homes.utils.bstats.Metrics;
 import org.bukkit.Bukkit;
@@ -39,6 +36,7 @@ public final class Homes extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ActionInventory(), this);
         Bukkit.getPluginManager().registerEvents(new VersionInform(), this);
         Bukkit.getPluginManager().registerEvents(new AdminInventory(), this);
+        Bukkit.getPluginManager().registerEvents(new MultipleSiteInventory(), this);
 
         this.getCommand("addhome").setExecutor(new AddHome());
         this.getCommand("homes").setExecutor(new Homecommand());

@@ -30,10 +30,8 @@ public class ActionInventory implements Listener {
     private double z;
     private World world;
     public static Location newloc;
-    private ItemStack navigator;
     private static String TELEPORT = Messages.msgconfig.getString("messages.teleport");
     private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
-    private static String COMPASSDESC = Messages.msgconfig.getString("messages.compassdesc");
     private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
 
     @EventHandler

@@ -60,7 +60,6 @@ public class NavigationScheduler {
                             REACHEDHOME = REACHEDHOME.replace("&", "§");
                             PREFIX = PREFIX.replace("&", "§");
                             all.sendMessage(PREFIX + REACHEDHOME);
-                            all.getInventory().remove(Material.COMPASS);
                         }
 
                     }
@@ -86,7 +85,7 @@ public class NavigationScheduler {
         for (double i = 0.5; i < Integer.parseInt(length); i+=Double.parseDouble(spacing)) {
             projection.multiply(i);
             playerloc.add(projection);
-            player.spawnParticle(particle, playerloc.getX(), playerloc.getY()+0.5, playerloc.getZ(), 0, 0, 0, 0);
+            player.spawnParticle(particle, playerloc.getX(), playerloc.getY()+1, playerloc.getZ(), 0, 0, 0, 0);
             playerloc.subtract(projection);
             projection.normalize();
 
