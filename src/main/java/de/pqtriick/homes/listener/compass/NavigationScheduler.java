@@ -28,8 +28,6 @@ public class NavigationScheduler {
     public static HashMap<Player, Location> navigation = new HashMap<>();
     private static double distance;
     private static boolean running;
-    private static String REACHEDHOME = Messages.msgconfig.getString("messages.reachedhome");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
     public static String enabled = Options.optionsconfig.getString("options.particle.enabled");
     public static Particle particle = Particle.valueOf(Options.optionsconfig.getString("options.particle.particle"));
     public static String delay = Options.optionsconfig.getString("options.particle.delay");
@@ -57,11 +55,8 @@ public class NavigationScheduler {
                         }
                         if (all.getLocation().distanceSquared(navigation.get(all)) <= 2) {
                             navigation.remove(all);
-                            REACHEDHOME = REACHEDHOME.replace("&", "§");
-                            PREFIX = PREFIX.replace("&", "§");
-                            all.sendMessage(PREFIX + REACHEDHOME);
+                            Messages.send(all, Messages.REACHEDHOME);
                         }
-
                     }
                 }
             }

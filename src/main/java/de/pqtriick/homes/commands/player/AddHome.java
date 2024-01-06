@@ -1,5 +1,6 @@
 package de.pqtriick.homes.commands.player;
 
+import de.cubbossa.tinytranslations.GlobalMessages;
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
@@ -20,20 +21,11 @@ import java.io.File;
 public class AddHome implements CommandExecutor {
 
     private static File file;
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
-    private static String HOMEEXISTS = Messages.msgconfig.getString("messages.homeexists");
-    private static String ADDSUCESS;
-    private static String ADDINFO = Messages.msgconfig.getString("messages.addinfo");
-    public static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
     public static int maxhomes = Integer.parseInt(Options.optionsconfig.getString("options.homes.maxsize"));
     private static int homeamount = 0;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        PREFIX = PREFIX.replace("&", "§");
-        HOMEEXISTS = HOMEEXISTS.replace("&", "§");
-        ADDINFO = ADDINFO.replace("&", "§");
-        NOPERM = NOPERM.replace("&", "§");
         Player p = (Player) sender;
         if (args.length==1) {
             homeamount = 0;
@@ -41,7 +33,7 @@ public class AddHome implements CommandExecutor {
                 file = new File(Homes.getInstance().getDataFolder().getPath(), p.getUniqueId() + ".yml");
                 if (Config.userfileExists(file)) {
                     if (Config.getConfiguration(file).get("homes." + args[0]) != null) {
-                        p.sendMessage(PREFIX + HOMEEXISTS);
+                        Messages.send(p, Messages.HOMEEXISTS);
                     } else {
                         if (Config.getConfiguration(file).getConfigurationSection("homes") != null) {
                             for (String homes : Config.getConfiguration(file).getConfigurationSection("homes").getKeys(false)) {
@@ -50,21 +42,18 @@ public class AddHome implements CommandExecutor {
                         }
                         if (homeamount < maxhomes) {
                             ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), p.getWorld(), file);
-                            ADDSUCESS = Messages.msgconfig.getString("messages.addsucess");
-                            ADDSUCESS = ADDSUCESS.replace("&", "§");
-                            ADDSUCESS = ADDSUCESS.replace("%homename%", args[0]);
-                            p.sendMessage(PREFIX + ADDSUCESS);
-                            p.sendMessage(PREFIX + ADDINFO);
+                            Messages.send(p, Messages.ADDSUCESS.insertString("homename", args[0]));
+                            Messages.send(p, Messages.ADDINFO);
                         } else {
-                            p.sendMessage(PREFIX + "§cYou have reached the maximum amount of homes.");
+                            Messages.send(p, Messages.MAX_HOMES);
                         }
                     }
                 }
             } else {
-                p.sendMessage(NOPERM);
+                Messages.send(p, GlobalMessages.NO_PERM_CMD);
             }
         } else {
-            p.sendMessage(PREFIX + "§3/addhome [name]");
+            Messages.send(p, Messages.SYNTAX_ADDHOME);
         }
         return false;
     }

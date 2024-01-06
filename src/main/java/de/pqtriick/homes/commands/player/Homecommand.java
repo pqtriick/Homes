@@ -1,5 +1,6 @@
 package de.pqtriick.homes.commands.player;
 
+import de.cubbossa.tinytranslations.GlobalMessages;
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
@@ -18,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import java.io.File;
 import java.util.Arrays;
 
+import static de.pqtriick.homes.files.Messages.*;
 import static de.pqtriick.homes.listener.inventory.MultipleSiteInventory.homesiteinv;
 
 /**
@@ -30,17 +32,9 @@ public class Homecommand implements CommandExecutor {
     private static File playerstorage;
     public static Inventory homeinv;
     private int invnumber;
-    private static String LEFTCLICK = Messages.msgconfig.getString("messages.leftclick");
-    private static String RIGHTCLICK = Messages.msgconfig.getString("messages.rightclick");
-    private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        LEFTCLICK = LEFTCLICK.replace("&", "§");
-        RIGHTCLICK = RIGHTCLICK.replace("&", "§");
-        NOPERM = NOPERM.replace("&", "§");
-        PREFIX = PREFIX.replace("&", "§");
         Player player = (Player) sender;
         homeinv = Bukkit.createInventory(null, 9*5, "§3§lHomes");
         playerstorage = new File(Homes.getInstance().getDataFolder().getPath(), player.getUniqueId() + ".yml");
@@ -54,9 +48,9 @@ public class Homecommand implements CommandExecutor {
                             invnumber++;
                         } else if (invnumber <=43) {
                             try {
-                                homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, LEFTCLICK, RIGHTCLICK));
+                                homeinv.setItem(invnumber, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), HOME_NAME.insertString("home", homes), HOME_LORE));
                             } catch (Exception exe) {
-                                homeinv.setItem(invnumber, new ItemBuilder(Material.CHEST).setName("§e" + homes).setLore(LEFTCLICK).setLore(RIGHTCLICK).build());
+                                homeinv.setItem(invnumber, new ItemBuilder(Material.CHEST).setName(HOME_NAME.insertString("home", homes)).setLore(HOME_LORE).build());
                             }
                             invnumber++;
                         } else {
@@ -65,9 +59,10 @@ public class Homecommand implements CommandExecutor {
                                     invnumber++;
                                 } else {
                                     try {
-                                        homesiteinv.setItem(invnumber-45, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), "§e" + homes, LEFTCLICK, RIGHTCLICK));
+                                        homesiteinv.setItem(invnumber-45, SkullBuilder.getCustomSkull(Skulls.HOUSE.getTexture(), HOME_NAME.insertString("home", homes), HOME_LORE));
                                     } catch (Exception exe) {
-                                        homesiteinv.setItem(invnumber-45, new ItemBuilder(Material.CHEST).setName("§e" + homes).setLore(LEFTCLICK).setLore(RIGHTCLICK).build());
+                                        homesiteinv.setItem(invnumber-45, new ItemBuilder(Material.CHEST)
+                                                .setName(HOME_NAME.insertString("home", homes)).setLore(HOME_LORE).build());
                                     }
                                     invnumber++;
                                 }
@@ -81,12 +76,10 @@ public class Homecommand implements CommandExecutor {
                 player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 2);
                 player.openInventory(homeinv);
             } else {
-                player.sendMessage(PREFIX + "§cYou don't have any homes!");
+                send(player, NO_HOMES);
             }
-
         } else {
-            player.sendMessage(NOPERM);
-
+            send(player, GlobalMessages.NO_PERM_CMD);
         }
         return false;
     }

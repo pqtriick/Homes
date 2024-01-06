@@ -1,5 +1,6 @@
 package de.pqtriick.homes.commands.admin;
 
+import de.cubbossa.tinytranslations.GlobalMessages;
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
@@ -30,24 +31,20 @@ public class CheckHomes implements CommandExecutor {
     private static File playerstorage;
     public static Inventory checkhomes;
     private int invnumber;
-    private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
     public static HashMap<Player, UUID> invName = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        NOPERM = NOPERM.replace("&", "§");
-        PREFIX = PREFIX.replace("&", "§");
         Player player = (Player) sender;
         if (player.hasPermission("homes.admin")) {
             if (args.length == 1) {
                 playerstorage = new File(Homes.getInstance().getDataFolder().getPath(), getPlayer(args[0]) + ".yml");
                 if (!Config.userfileExists(playerstorage)) {
-                    player.sendMessage(PREFIX + "§cThis user is not known by the plugin.");
+                    Messages.send(player, Messages.UNKNOWN_USER);
                     return true;
                 }
                 if (Config.getConfiguration(playerstorage).get("homes") == null) {
-                    player.sendMessage(PREFIX + "§cThis user doesn't have any homes.");
+                    Messages.send(player, Messages.NO_HOMES_OTHER);
                     return true;
                 }
                 checkhomes = Bukkit.createInventory(null, 9 * 5, "§b" + args[0] + " §3Homes");
@@ -64,11 +61,11 @@ public class CheckHomes implements CommandExecutor {
                 player.openInventory(checkhomes);
                 invName.put(player, getPlayer(args[0]));
             } else {
-                player.sendMessage(PREFIX + "§7/checkhome [Player]");
+                Messages.send(player, Messages.SYNTAX_CHECKHOMES);
 
             }
         } else {
-            player.sendMessage(NOPERM);
+            Messages.send(player, GlobalMessages.NO_PERM_CMD);
         }
         return false;
     }

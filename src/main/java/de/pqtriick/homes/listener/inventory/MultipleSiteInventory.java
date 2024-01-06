@@ -26,17 +26,9 @@ import java.io.File;
 public class MultipleSiteInventory implements Listener {
 
     public static Inventory homesiteinv = Bukkit.createInventory(null, 9*5, "§3§lHomes");
-    private static String LEFTCLICK = Messages.msgconfig.getString("messages.leftclick");
-    private static String RIGHTCLICK = Messages.msgconfig.getString("messages.rightclick");
-    private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
 
     @EventHandler
     public void onSiteSwitch(InventoryClickEvent event) {
-        LEFTCLICK = LEFTCLICK.replace("&", "§");
-        RIGHTCLICK = RIGHTCLICK.replace("&", "§");
-        NOPERM = NOPERM.replace("&", "§");
-        PREFIX = PREFIX.replace("&", "§");
         if (event.getClickedInventory() == null) return;
         if (event.getCurrentItem() == null) return;
         Player player = (Player) event.getWhoClicked();

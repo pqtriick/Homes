@@ -29,16 +29,10 @@ public class AdminInventory implements Listener {
     private double z;
     private World world;
     public static Location newloc;
-    private static String TELEPORT = Messages.msgconfig.getString("messages.teleport");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
-    private static String HOMEDELETE = Messages.msgconfig.getString("messages.homedeletion");
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return;
-        TELEPORT = TELEPORT.replace("&", "§");
-        PREFIX = PREFIX.replace("&", "§");
-        HOMEDELETE = HOMEDELETE.replace("&", "§");
         Player player = (Player) event.getWhoClicked();
 
         playerdata = new File(Homes.getInstance().getDataFolder().getPath(), CheckHomes.invName.get(player) + ".yml");
@@ -56,14 +50,14 @@ public class AdminInventory implements Listener {
                     world = Bukkit.getWorld(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".world")));
                     newloc = new Location(world, x, y, z);
                     player.teleport(newloc);
-                    player.sendMessage(PREFIX + TELEPORT);
+                    Messages.send(player, Messages.TELEPORT);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 2);
                     player.closeInventory();
 
                 } else if (event.getClick().equals(ClickType.RIGHT)) {
                     String path = "homes." + ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
                     Config.set(Config.getConfiguration(playerdata), playerdata, path, null);
-                    player.sendMessage(PREFIX + HOMEDELETE);
+                    Messages.send(player, Messages.HOMEDELETION);
                     player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
                     player.closeInventory();
 

@@ -1,5 +1,6 @@
 package de.pqtriick.homes.listener.inventory;
 
+import de.cubbossa.tinytranslations.MessageFormat;
 import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.utils.ItemBuilder;
 import de.pqtriick.homes.utils.Skull.SkullBuilder;
@@ -20,6 +21,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
+import static de.pqtriick.homes.files.Messages.*;
+
 /**
  * @author pqtriick_
  * @created 12:09, 07.10.2023
@@ -30,26 +33,10 @@ public class MainInventoryClick implements Listener {
     public static HashMap<Player, String> homeselection = new HashMap<>();
     public static Inventory homedelete;
     public static Inventory homeactions;
-    private static String GUIDELHOME = Messages.msgconfig.getString("messages.guidelhome");
-    private static String GUIDELHOMELORE = Messages.msgconfig.getString("messages.guidelhomelore");
-    private static String GUICANCELACTION = Messages.msgconfig.getString("messages.guicancelaction");
-    private static String GUICANCELACTIONLORE = Messages.msgconfig.getString("messages.guicancelactionlore");
-    private static String GUITPHOME = Messages.msgconfig.getString("messages.guitphome");
-    private static String GUITPHOMELORE = Messages.msgconfig.getString("messages.guitphomelore");
-    private static String GUINAVIGATION = Messages.msgconfig.getString("messages.guinavigation");
-    private static String GUINAVIGATIONLORE = Messages.msgconfig.getString("messages.guinavigationlore");
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return;
-        GUIDELHOME = GUIDELHOME.replace("&", "§");
-        GUIDELHOMELORE = GUIDELHOMELORE.replace("&", "§");
-        GUICANCELACTION = GUICANCELACTION.replace("&", "§");
-        GUICANCELACTIONLORE = GUICANCELACTIONLORE.replace("&", "§");
-        GUITPHOME = GUITPHOME.replace("&", "§");
-        GUITPHOMELORE = GUITPHOMELORE.replace("&", "§");
-        GUINAVIGATION = GUINAVIGATION.replace("&", "§");
-        GUINAVIGATIONLORE = GUINAVIGATIONLORE.replace("&", "§");
         Player p = (Player) event.getWhoClicked();
         if (event.getInventory().equals(homedelete)) {
             event.setCancelled(true);
@@ -62,11 +49,13 @@ public class MainInventoryClick implements Listener {
                         homedelete.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
                     }
                     try {
-                        homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), GUIDELHOME, GUIDELHOMELORE));
-                        homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), GUICANCELACTION, GUICANCELACTIONLORE));
+                        homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), GUI_DELHOME, GUI_DELHOMELORE));
+                        homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), GUI_CANCELACTION, GUI_CANCELACTIONLORE));
                     } catch (Exception exe) {
-                        homedelete.setItem(2, new ItemBuilder(Material.LIME_CONCRETE).setName(GUIDELHOME).setLore(GUIDELHOMELORE).build());
-                        homedelete.setItem(6, new ItemBuilder(Material.RED_CONCRETE).setName(GUICANCELACTION).setLore(GUICANCELACTIONLORE).build());
+                        homedelete.setItem(2, new ItemBuilder(Material.LIME_CONCRETE)
+                                .setName(GUI_DELHOME).setLore(GUI_DELHOMELORE).build());
+                        homedelete.setItem(6, new ItemBuilder(Material.RED_CONCRETE)
+                                .setName(GUI_CANCELACTION).setLore(GUI_CANCELACTIONLORE).build());
                     }
                     p.openInventory(homedelete);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
@@ -79,11 +68,11 @@ public class MainInventoryClick implements Listener {
                         homeactions.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
                     }
                     try {
-                        homeactions.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), GUITPHOME, GUITPHOMELORE));
-                        homeactions.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), GUINAVIGATION, GUINAVIGATIONLORE));
+                        homeactions.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), GUI_TPHOME, GUI_TPHOMELORE));
+                        homeactions.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), GUI_NAVIGATION, GUI_NAVIGATIONLORE));
                     } catch (Exception exe) {
-                        homeactions.setItem(2, new ItemBuilder(Material.ENDER_EYE).setName(GUITPHOME).setLore(GUITPHOMELORE).build());
-                        homeactions.setItem(6, new ItemBuilder(Material.COMPASS).setName(GUINAVIGATION).setLore(GUINAVIGATIONLORE).build());
+                        homeactions.setItem(2, new ItemBuilder(Material.ENDER_EYE).setName(GUI_TPHOME).setLore(GUI_TPHOMELORE).build());
+                        homeactions.setItem(6, new ItemBuilder(Material.COMPASS).setName(GUI_NAVIGATION).setLore(GUI_NAVIGATIONLORE).build());
                     }
                     p.openInventory(homeactions);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));

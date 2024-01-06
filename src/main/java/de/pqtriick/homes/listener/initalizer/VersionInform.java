@@ -17,18 +17,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VersionInform implements Listener {
 
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        PREFIX = PREFIX.replace("&", "§");
         Player p = event.getPlayer();
         if (p.hasPermission("homes.admin")) {
             if (Homes.hasUpdate) {
-                p.sendMessage(PREFIX + "§aThere is a new Update available for §3Homes §a!");
-                p.sendMessage(PREFIX + "§ehttps://www.spigotmc.org/resources/homes.112984/");
+                Messages.send(p, Messages.UPDATE_AVAILABLE);
             }
         }
     }
-
 }

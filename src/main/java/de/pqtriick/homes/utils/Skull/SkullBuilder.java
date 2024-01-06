@@ -2,6 +2,8 @@ package de.pqtriick.homes.utils.Skull;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import de.cubbossa.tinytranslations.Message;
+import de.cubbossa.tinytranslations.MessageFormat;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -17,6 +19,10 @@ import java.util.UUID;
  */
 
 public class SkullBuilder {
+
+    public static ItemStack getCustomSkull(String url, Message name, Message lore) {
+        return getCustomSkull(url, name.toString(MessageFormat.LEGACY_PARAGRAPH), lore.toString(MessageFormat.LEGACY_PARAGRAPH).split("\n"));
+    }
 
     public static ItemStack getCustomSkull(String url, String name, String... lore) {
 

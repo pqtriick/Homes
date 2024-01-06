@@ -1,5 +1,7 @@
 package de.pqtriick.homes.commands.admin;
 
+import de.cubbossa.tinytranslations.GlobalMessages;
+import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.commands.player.AddHome;
 import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.files.Options;
@@ -19,32 +21,26 @@ import java.io.IOException;
 
 public class ReloadValues implements CommandExecutor {
 
-    private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
-
-
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        NOPERM = NOPERM.replace("&", "§");
-        PREFIX = PREFIX.replace("&", "§");
         Player player = (Player) sender;
         if (player.hasPermission("homes.admin")) {
             if (args.length==0) {
                 try {
+                    Homes.getInstance().reloadLocales();
                     NavigationScheduler.enabled = Options.optionsconfig.getString("options.particle.enabled");
                     NavigationScheduler.particle = Particle.valueOf(Options.optionsconfig.getString("options.particle.particle"));
                     NavigationScheduler.delay = Options.optionsconfig.getString("options.particle.delay");
                     AddHome.maxhomes = Integer.valueOf(Options.optionsconfig.getString("options.homes.maxsize"));
-                    player.sendMessage(PREFIX + "§aSucessfully reloaded values!");
+                    Messages.send(player, Messages.RELOAD_SUCCESS);
                 } catch (Exception e) {
-                    player.sendMessage(PREFIX + "§cCouldn't reload values.");
-                    player.sendMessage("§c" + e);
+                    Messages.send(player, Messages.RELOAD_FAIL.insertString("reason", e.toString()));
                 }
 
             }
         } else {
-            player.sendMessage(NOPERM);
+            Messages.send(player, GlobalMessages.NO_PERM_CMD);
         }
         return false;
     }
