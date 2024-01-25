@@ -35,7 +35,7 @@ public class NavigationScheduler {
     public static String delay = Options.optionsconfig.getString("options.particle.delay");
     public static String spacing = Options.optionsconfig.getString("options.navigation.particle.spacing");
     public static String length = Options.optionsconfig.getString("options.navigation.particle.length");
-    public static Particle navigationparticle = Particle.valueOf(Options.optionsconfig.getString("options.navigation.particle.particle"));
+    public static Particle navigationparticle = Particle.valueOf(Options.optionsconfig.getString("options.navigation.particle"));
 
 
     public static void startScheduler() {
