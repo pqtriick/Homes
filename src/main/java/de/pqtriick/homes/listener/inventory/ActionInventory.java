@@ -3,16 +3,14 @@ package de.pqtriick.homes.listener.inventory;
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
+import de.pqtriick.homes.files.Permissions;
 import de.pqtriick.homes.listener.compass.NavigationScheduler;
-import de.pqtriick.homes.utils.ItemBuilder;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.Objects;
@@ -44,7 +42,7 @@ public class ActionInventory implements Listener {
         NOPERM = NOPERM.replace("&", "§");
         if (event.getClickedInventory().equals(MainInventoryClick.homeactions)) {
             if (event.getSlot() == 2) {
-                if (p.hasPermission("homes.teleport")) {
+                if (Permissions.permissionsConfig.getString("homes.teleport") == null || p.hasPermission(Permissions.permissionsConfig.getString("homes.teleport"))) {
                     String path = "homes." + MainInventoryClick.homeselection.get(p);
                     x = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".X")));
                     y = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Y")));
@@ -60,7 +58,7 @@ public class ActionInventory implements Listener {
                     p.sendMessage(NOPERM);
                 }
             } else if(event.getSlot() == 6){
-                if (p.hasPermission("homes.navigate")) {
+                if (Permissions.permissionsConfig.getString("homes.navigate") == null || p.hasPermission(Permissions.permissionsConfig.getString("homes.navigate"))) {
                     String path = "homes." + MainInventoryClick.homeselection.get(p);
                     x = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".X")));
                     y = Double.parseDouble(Objects.requireNonNull(Config.getConfiguration(playerdata).getString(path + ".Y")));

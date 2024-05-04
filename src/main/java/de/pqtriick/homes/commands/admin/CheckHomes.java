@@ -3,6 +3,7 @@ package de.pqtriick.homes.commands.admin;
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
+import de.pqtriick.homes.files.Permissions;
 import de.pqtriick.homes.utils.ItemBuilder;
 import de.pqtriick.homes.utils.Skull.SkullBuilder;
 import de.pqtriick.homes.utils.Skull.Skulls;
@@ -39,7 +40,7 @@ public class CheckHomes implements CommandExecutor {
         NOPERM = NOPERM.replace("&", "§");
         PREFIX = PREFIX.replace("&", "§");
         Player player = (Player) sender;
-        if (player.hasPermission("homes.admin")) {
+        if (Permissions.permissionsConfig.getString("homes.admin") == null || player.hasPermission(Permissions.permissionsConfig.getString("homes.admin"))) {
             if (args.length == 1) {
                 playerstorage = new File(Homes.getInstance().getDataFolder().getPath(), getPlayer(args[0]) + ".yml");
                 if (!Config.userfileExists(playerstorage)) {

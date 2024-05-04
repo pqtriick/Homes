@@ -3,6 +3,7 @@ package de.pqtriick.homes.commands.player;
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
+import de.pqtriick.homes.files.Permissions;
 import de.pqtriick.homes.utils.ItemBuilder;
 import de.pqtriick.homes.utils.Skull.SkullBuilder;
 import de.pqtriick.homes.utils.Skull.Skulls;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static de.pqtriick.homes.listener.inventory.MultipleSiteInventory.homesiteinv;
 
@@ -44,7 +46,7 @@ public class Homecommand implements CommandExecutor {
         Player player = (Player) sender;
         homeinv = Bukkit.createInventory(null, 9*5, "§3§lHomes");
         playerstorage = new File(Homes.getInstance().getDataFolder().getPath(), player.getUniqueId() + ".yml");
-        if (player.hasPermission("homes.use")) {
+        if (Permissions.permissionsConfig.getString("homes.use") == null || player.hasPermission(Permissions.permissionsConfig.getString("homes.use"))) {
             invnumber = 0;
             if (Config.getConfiguration(playerstorage).getConfigurationSection("homes") != null) {
                 for (String homes : Config.getConfiguration(playerstorage).getConfigurationSection("homes").getKeys(false)) {

@@ -4,6 +4,7 @@ import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.files.Options;
+import de.pqtriick.homes.files.Permissions;
 import de.pqtriick.homes.files.homes.ConfigValues;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +38,7 @@ public class AddHome implements CommandExecutor {
         Player p = (Player) sender;
         if (args.length==1) {
             homeamount = 0;
-            if (p.hasPermission("homes.create")) {
+            if (Permissions.permissionsConfig.getString("homes.create") == null || p.hasPermission(Permissions.permissionsConfig.getString("homes.create"))) {
                 file = new File(Homes.getInstance().getDataFolder().getPath(), p.getUniqueId() + ".yml");
                 if (Config.userfileExists(file)) {
                     if (Config.getConfiguration(file).get("homes." + args[0]) != null) {

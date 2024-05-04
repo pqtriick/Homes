@@ -3,6 +3,7 @@ package de.pqtriick.homes.commands.admin;
 import de.pqtriick.homes.commands.player.AddHome;
 import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.files.Options;
+import de.pqtriick.homes.files.Permissions;
 import de.pqtriick.homes.listener.compass.NavigationScheduler;
 import org.bukkit.Particle;
 import org.bukkit.command.Command;
@@ -29,7 +30,7 @@ public class ReloadValues implements CommandExecutor {
         NOPERM = NOPERM.replace("&", "§");
         PREFIX = PREFIX.replace("&", "§");
         Player player = (Player) sender;
-        if (player.hasPermission("homes.admin")) {
+        if (Permissions.permissionsConfig.getString("homes.admin") == null || player.hasPermission(Permissions.permissionsConfig.getString("homes.admin"))) {
             if (args.length==0) {
                 try {
                     NavigationScheduler.enabled = Options.optionsconfig.getString("options.particle.enabled");
