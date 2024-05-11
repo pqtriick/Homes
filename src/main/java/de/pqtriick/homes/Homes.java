@@ -1,5 +1,6 @@
 package de.pqtriick.homes;
 
+
 import de.pqtriick.homes.commands.admin.CheckHomes;
 import de.pqtriick.homes.commands.admin.ReloadValues;
 import de.pqtriick.homes.commands.player.AddHome;
@@ -8,6 +9,7 @@ import de.pqtriick.homes.files.Config;
 import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.files.Options;
 import de.pqtriick.homes.files.Permissions;
+import de.pqtriick.homes.listener.chat.RenameChat;
 import de.pqtriick.homes.listener.compass.NavigationScheduler;
 import de.pqtriick.homes.listener.initalizer.JoinConfig;
 import de.pqtriick.homes.listener.initalizer.VersionInform;
@@ -39,6 +41,7 @@ public final class Homes extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new VersionInform(), this);
         Bukkit.getPluginManager().registerEvents(new AdminInventory(), this);
         Bukkit.getPluginManager().registerEvents(new MultipleSiteInventory(), this);
+        Bukkit.getPluginManager().registerEvents(new RenameChat(), this);
 
         this.getCommand("addhome").setExecutor(new AddHome());
         this.getCommand("homes").setExecutor(new Homecommand());

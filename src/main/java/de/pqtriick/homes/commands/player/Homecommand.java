@@ -30,7 +30,7 @@ import static de.pqtriick.homes.listener.inventory.MultipleSiteInventory.homesit
 public class Homecommand implements CommandExecutor {
 
     private static File playerstorage;
-    public static Inventory homeinv;
+    public static Inventory homeinv = Bukkit.createInventory(null, 9*5, "§3§lHomes");
     private int invnumber;
     private static String LEFTCLICK = Messages.msgconfig.getString("messages.leftclick");
     private static String RIGHTCLICK = Messages.msgconfig.getString("messages.rightclick");
@@ -44,7 +44,6 @@ public class Homecommand implements CommandExecutor {
         NOPERM = NOPERM.replace("&", "§");
         PREFIX = PREFIX.replace("&", "§");
         Player player = (Player) sender;
-        homeinv = Bukkit.createInventory(null, 9*5, "§3§lHomes");
         playerstorage = new File(Homes.getInstance().getDataFolder().getPath(), player.getUniqueId() + ".yml");
         if (Permissions.permissionsConfig.getString("homes.use") == null || player.hasPermission(Permissions.permissionsConfig.getString("homes.use"))) {
             invnumber = 0;

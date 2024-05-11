@@ -1,13 +1,13 @@
 package de.pqtriick.homes.listener.inventory;
 
 import de.pqtriick.homes.files.Messages;
+import de.pqtriick.homes.listener.chat.RenameChat;
 import de.pqtriick.homes.utils.ItemBuilder;
 import de.pqtriick.homes.utils.Skull.SkullBuilder;
 import de.pqtriick.homes.utils.Skull.Skulls;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -88,6 +88,12 @@ public class MainInventoryClick implements Listener {
                     p.openInventory(homeactions);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
                 }
+            } else if (event.getClick() == ClickType.MIDDLE) {
+                if (p.getOpenInventory().getTitle().equals("§3§lHomes")) {
+                    ItemStack item = event.getCurrentItem();
+                    RenameChat.sendRenameMSG(p, item);
+                }
+
             }
         }
     }
