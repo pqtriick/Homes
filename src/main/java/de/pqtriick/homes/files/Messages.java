@@ -1,6 +1,7 @@
 package de.pqtriick.homes.files;
 
 import de.pqtriick.homes.Homes;
+import de.pqtriick.homes.commands.admin.ReloadMessages;
 import de.pqtriick.homes.commands.player.Homecommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,9 +15,29 @@ import java.io.File;
 
 public class Messages {
 
-    private static File msgfile = new File(Homes.getInstance().getDataFolder().getPath(), "messages.yml");
+    public static File msgfile = new File(Homes.getInstance().getDataFolder().getPath(), "messages.yml");
     public static FileConfiguration msgconfig = YamlConfiguration.loadConfiguration(msgfile);
 
+    public static String PREFIX = "";
+    public static String NOPERM = "";
+    public static String HOME_EXISTS = "";
+    public static String ADD_SUCCESS = "";
+    public static String ADD_INFO = "";
+    public static String LEFT_CLICK = "";
+    public static String RIGHT_CLICK = "";
+    public static String HOME_REACHED = "";
+    public static String HOME_TELEPORT = "";
+    public static String COMPASS_DESC = "";
+    public static String ACTION_CANCEL = "";
+    public static String HOME_DELETE = "";
+    public static String HOME_DELETE_GUI = "";
+    public static String HOME_DELETE_LORE_GUI = "";
+    public static String ACTION_CANCEL_GUI = "";
+    public static String ACTION_CANCEL_LORE_GUI = "";
+    public static String HOME_TELEPORT_GUI = "";
+    public static String HOME_TELEPORT_LORE_GUI = "";
+    public static String HOME_NAVIGATION = "";
+    public static String HOME_NAVIGATION_LORE = "";
     public static void initMessageFile() {
         if(!msgfile.exists()) {
             Config.createFile(msgfile);
@@ -41,11 +62,7 @@ public class Messages {
             msgconfig.set("messages.guinavigation", "&6Navigate to home");
             msgconfig.set("messages.guinavigationlore", "&7➥ &6Click to navigate");
             Config.saveFile(msgconfig, msgfile);
-
-
-
-
         }
-
+        ReloadMessages.reloadMessages();
     }
 }

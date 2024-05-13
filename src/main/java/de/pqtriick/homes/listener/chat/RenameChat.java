@@ -22,15 +22,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static de.pqtriick.homes.files.Messages.PREFIX;
+
 public class RenameChat implements Listener{
 
     private static File playerstorage;
     private static HashMap<Player, String> oldNameMap = new HashMap<>();
     private static ArrayList<Player> inputAwaiting = new ArrayList<>();
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
-
     public static void sendRenameMSG(Player player, ItemStack item) {
-        PREFIX = PREFIX.replace("&", "§");
         player.closeInventory();
         player.sendMessage(PREFIX + " §bWrite the new name for your home. Type §ecancel §bto cancel input!");
         inputAwaiting.add(player);

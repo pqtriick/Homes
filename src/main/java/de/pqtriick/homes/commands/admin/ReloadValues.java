@@ -13,6 +13,9 @@ import org.bukkit.entity.Player;
 
 import java.io.IOException;
 
+import static de.pqtriick.homes.files.Messages.NOPERM;
+import static de.pqtriick.homes.files.Messages.PREFIX;
+
 /**
  * @author pqtriick_
  * @created 17:07, 31.10.2023
@@ -20,15 +23,9 @@ import java.io.IOException;
 
 public class ReloadValues implements CommandExecutor {
 
-    private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
-
-
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        NOPERM = NOPERM.replace("&", "§");
-        PREFIX = PREFIX.replace("&", "§");
+
         Player player = (Player) sender;
         if (Permissions.permissionsConfig.getString("homes.admin") == null || player.hasPermission(Permissions.permissionsConfig.getString("homes.admin"))) {
             if (args.length==0) {

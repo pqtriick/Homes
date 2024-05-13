@@ -2,6 +2,7 @@ package de.pqtriick.homes;
 
 
 import de.pqtriick.homes.commands.admin.CheckHomes;
+import de.pqtriick.homes.commands.admin.ReloadMessages;
 import de.pqtriick.homes.commands.admin.ReloadValues;
 import de.pqtriick.homes.commands.player.AddHome;
 import de.pqtriick.homes.commands.player.Homecommand;
@@ -47,6 +48,7 @@ public final class Homes extends JavaPlugin {
         this.getCommand("homes").setExecutor(new Homecommand());
         this.getCommand("checkhomes").setExecutor(new CheckHomes());
         this.getCommand("reloadvalues").setExecutor(new ReloadValues());
+        this.getCommand("reloadmessages").setExecutor(new ReloadMessages());
         NavigationScheduler.startScheduler();
         checkUpdate();
         Metrics metrics = new Metrics(this, bstatsid);

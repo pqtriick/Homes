@@ -21,6 +21,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static de.pqtriick.homes.files.Messages.NOPERM;
+import static de.pqtriick.homes.files.Messages.PREFIX;
+
 /**
  * @author pqtriick_
  * @created 19:59, 19.10.2023
@@ -31,14 +34,11 @@ public class CheckHomes implements CommandExecutor {
     private static File playerstorage;
     public static Inventory checkhomes;
     private int invnumber;
-    private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
+
     public static HashMap<Player, UUID> invName = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        NOPERM = NOPERM.replace("&", "§");
-        PREFIX = PREFIX.replace("&", "§");
         Player player = (Player) sender;
         if (Permissions.permissionsConfig.getString("homes.admin") == null || player.hasPermission(Permissions.permissionsConfig.getString("homes.admin"))) {
             if (args.length == 1) {

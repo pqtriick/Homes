@@ -15,6 +15,10 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import java.io.File;
 import java.util.Objects;
 
+import static de.pqtriick.homes.files.Messages.HOME_TELEPORT;
+import static de.pqtriick.homes.files.Messages.NOPERM;
+import static de.pqtriick.homes.files.Messages.PREFIX;
+
 /**
  * @author pqtriick_
  * @created 12:39, 07.10.2023
@@ -28,18 +32,12 @@ public class ActionInventory implements Listener {
     private double z;
     private World world;
     public static Location newloc;
-    private static String TELEPORT = Messages.msgconfig.getString("messages.teleport");
-    private static String PREFIX = Messages.msgconfig.getString("messages.prefix");
-    private static String NOPERM = Messages.msgconfig.getString("messages.nopermission");
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return;
         Player p = (Player) event.getWhoClicked();
         playerdata = new File(Homes.getInstance().getDataFolder().getPath(), p.getUniqueId() + ".yml");
-        TELEPORT = TELEPORT.replace("&", "§");
-        PREFIX = PREFIX.replace("&", "§");
-        NOPERM = NOPERM.replace("&", "§");
         if (event.getClickedInventory().equals(MainInventoryClick.homeactions)) {
             if (event.getSlot() == 2) {
                 if (Permissions.permissionsConfig.getString("homes.teleport") == null || p.hasPermission(Permissions.permissionsConfig.getString("homes.teleport"))) {
@@ -50,7 +48,7 @@ public class ActionInventory implements Listener {
                     world = Bukkit.getWorld(Config.getConfiguration(playerdata).getString(path + ".world"));
                     newloc = new Location(world, x, y, z);
                     p.teleport(newloc);
-                    p.sendMessage(PREFIX + TELEPORT);
+                    p.sendMessage(PREFIX + HOME_TELEPORT);
                     p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 2);
                     p.closeInventory();
                     MainInventoryClick.homeselection.remove(p);

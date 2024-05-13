@@ -20,6 +20,15 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
+import static de.pqtriick.homes.files.Messages.ACTION_CANCEL_GUI;
+import static de.pqtriick.homes.files.Messages.ACTION_CANCEL_LORE_GUI;
+import static de.pqtriick.homes.files.Messages.HOME_DELETE_GUI;
+import static de.pqtriick.homes.files.Messages.HOME_DELETE_LORE_GUI;
+import static de.pqtriick.homes.files.Messages.HOME_NAVIGATION;
+import static de.pqtriick.homes.files.Messages.HOME_NAVIGATION_LORE;
+import static de.pqtriick.homes.files.Messages.HOME_TELEPORT_GUI;
+import static de.pqtriick.homes.files.Messages.HOME_TELEPORT_LORE_GUI;
+
 /**
  * @author pqtriick_
  * @created 12:09, 07.10.2023
@@ -30,26 +39,12 @@ public class MainInventoryClick implements Listener {
     public static HashMap<Player, String> homeselection = new HashMap<>();
     public static Inventory homedelete;
     public static Inventory homeactions;
-    private static String GUIDELHOME = Messages.msgconfig.getString("messages.guidelhome");
-    private static String GUIDELHOMELORE = Messages.msgconfig.getString("messages.guidelhomelore");
-    private static String GUICANCELACTION = Messages.msgconfig.getString("messages.guicancelaction");
-    private static String GUICANCELACTIONLORE = Messages.msgconfig.getString("messages.guicancelactionlore");
-    private static String GUITPHOME = Messages.msgconfig.getString("messages.guitphome");
-    private static String GUITPHOMELORE = Messages.msgconfig.getString("messages.guitphomelore");
-    private static String GUINAVIGATION = Messages.msgconfig.getString("messages.guinavigation");
-    private static String GUINAVIGATIONLORE = Messages.msgconfig.getString("messages.guinavigationlore");
+
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (event.getClickedInventory() == null) return;
-        GUIDELHOME = GUIDELHOME.replace("&", "§");
-        GUIDELHOMELORE = GUIDELHOMELORE.replace("&", "§");
-        GUICANCELACTION = GUICANCELACTION.replace("&", "§");
-        GUICANCELACTIONLORE = GUICANCELACTIONLORE.replace("&", "§");
-        GUITPHOME = GUITPHOME.replace("&", "§");
-        GUITPHOMELORE = GUITPHOMELORE.replace("&", "§");
-        GUINAVIGATION = GUINAVIGATION.replace("&", "§");
-        GUINAVIGATIONLORE = GUINAVIGATIONLORE.replace("&", "§");
+
         Player p = (Player) event.getWhoClicked();
         if (event.getInventory().equals(homedelete)) {
             event.setCancelled(true);
@@ -62,11 +57,11 @@ public class MainInventoryClick implements Listener {
                         homedelete.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
                     }
                     try {
-                        homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), GUIDELHOME, GUIDELHOMELORE));
-                        homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), GUICANCELACTION, GUICANCELACTIONLORE));
+                        homedelete.setItem(2, SkullBuilder.getCustomSkull(Skulls.GREEN.getTexture(), HOME_DELETE_GUI, HOME_DELETE_LORE_GUI));
+                        homedelete.setItem(6, SkullBuilder.getCustomSkull(Skulls.RED.getTexture(), ACTION_CANCEL_GUI, ACTION_CANCEL_LORE_GUI));
                     } catch (Exception exe) {
-                        homedelete.setItem(2, new ItemBuilder(Material.LIME_CONCRETE).setName(GUIDELHOME).setLore(GUIDELHOMELORE).build());
-                        homedelete.setItem(6, new ItemBuilder(Material.RED_CONCRETE).setName(GUICANCELACTION).setLore(GUICANCELACTIONLORE).build());
+                        homedelete.setItem(2, new ItemBuilder(Material.LIME_CONCRETE).setName(HOME_DELETE_GUI).setLore(HOME_DELETE_LORE_GUI).build());
+                        homedelete.setItem(6, new ItemBuilder(Material.RED_CONCRETE).setName(ACTION_CANCEL_GUI).setLore(ACTION_CANCEL_LORE_GUI).build());
                     }
                     p.openInventory(homedelete);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
@@ -79,11 +74,11 @@ public class MainInventoryClick implements Listener {
                         homeactions.setItem(i, new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName("").build());
                     }
                     try {
-                        homeactions.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), GUITPHOME, GUITPHOMELORE));
-                        homeactions.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), GUINAVIGATION, GUINAVIGATIONLORE));
+                        homeactions.setItem(2, SkullBuilder.getCustomSkull(Skulls.TELEPORT.getTexture(), HOME_TELEPORT_GUI, HOME_TELEPORT_LORE_GUI));
+                        homeactions.setItem(6, SkullBuilder.getCustomSkull(Skulls.NAVIGATION.getTexture(), HOME_NAVIGATION, HOME_NAVIGATION_LORE));
                     } catch (Exception exe) {
-                        homeactions.setItem(2, new ItemBuilder(Material.ENDER_EYE).setName(GUITPHOME).setLore(GUITPHOMELORE).build());
-                        homeactions.setItem(6, new ItemBuilder(Material.COMPASS).setName(GUINAVIGATION).setLore(GUINAVIGATIONLORE).build());
+                        homeactions.setItem(2, new ItemBuilder(Material.ENDER_EYE).setName(HOME_TELEPORT_GUI).setLore(HOME_TELEPORT_LORE_GUI).build());
+                        homeactions.setItem(6, new ItemBuilder(Material.COMPASS).setName(HOME_NAVIGATION).setLore(HOME_NAVIGATION_LORE).build());
                     }
                     p.openInventory(homeactions);
                     homeselection.put(p, ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()));
