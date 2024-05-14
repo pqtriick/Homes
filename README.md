@@ -80,4 +80,4 @@ For recommendations write in the discussion tab or create a issue on github
 # Pictures
 
 ![](https://github.com/pqtriick/Homes/blob/master/2023-10-07_17.06.01.png)
-![](https://github.com/pqtriick/Homes/blob/master/Unbenannt.png)
+![](https://github.com/pqtriick/Homes/blob/master/Unbenannt.PNG)
