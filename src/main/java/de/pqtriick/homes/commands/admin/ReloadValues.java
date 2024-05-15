@@ -33,7 +33,6 @@ public class ReloadValues implements CommandExecutor {
                     NavigationScheduler.enabled = Options.optionsconfig.getString("options.particle.enabled");
                     NavigationScheduler.particle = Particle.valueOf(Options.optionsconfig.getString("options.particle.particle"));
                     NavigationScheduler.delay = Options.optionsconfig.getString("options.particle.delay");
-                    AddHome.maxhomes = Integer.valueOf(Options.optionsconfig.getString("options.homes.maxsize"));
                     player.sendMessage(PREFIX + "§aSucessfully reloaded values!");
                 } catch (Exception e) {
                     player.sendMessage(PREFIX + "§cCouldn't reload values.");

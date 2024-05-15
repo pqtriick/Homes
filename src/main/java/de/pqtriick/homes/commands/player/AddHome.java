@@ -6,6 +6,7 @@ import de.pqtriick.homes.files.Messages;
 import de.pqtriick.homes.files.Options;
 import de.pqtriick.homes.files.Permissions;
 import de.pqtriick.homes.files.homes.ConfigValues;
+import de.pqtriick.homes.listener.initalizer.HomeAmountCalc;
 import de.pqtriick.homes.utils.enums.MessageEnum;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,7 +29,8 @@ import static de.pqtriick.homes.files.Messages.PREFIX;
 public class AddHome implements CommandExecutor {
 
     private static File file;
-    public static int maxhomes = Integer.parseInt(Options.optionsconfig.getString("options.homes.maxsize"));
+    private static File optionsfile = new File(Homes.getInstance().getDataFolder().getPath(), "options.yml");
+    public static int maxhomes;
     private static int homeamount = 0;
 
     @Override
@@ -46,6 +48,11 @@ public class AddHome implements CommandExecutor {
                             for (String homes : Config.getConfiguration(file).getConfigurationSection("homes").getKeys(false)) {
                                 homeamount++;
                             }
+                        }
+                        if (Config.getConfiguration(optionsfile).getString("options.homerank.enabled").equalsIgnoreCase("true")) {
+                            maxhomes = Integer.parseInt(Config.getConfiguration(optionsfile).getString("options.homerank.defaultsize"));
+                        } else {
+                            maxhomes = HomeAmountCalc.getHomeAmount(p);
                         }
                         if (homeamount < maxhomes) {
                             ConfigValues.saveLocation(args[0], p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), p.getWorld(), file);
