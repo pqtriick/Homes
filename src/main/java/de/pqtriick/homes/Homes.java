@@ -1,20 +1,24 @@
 package de.pqtriick.homes;
 
-
-import de.pqtriick.homes.commands.admin.CheckHomes;
+import de.pqtriick.homes.commands.admin.AddHomePerm;
+import de.pqtriick.homes.commands.admin.ReloadPerms;
 import de.pqtriick.homes.commands.admin.ReloadMessages;
-import de.pqtriick.homes.commands.admin.ReloadValues;
-import de.pqtriick.homes.commands.player.AddHome;
-import de.pqtriick.homes.commands.player.Homecommand;
-import de.pqtriick.homes.files.Config;
-import de.pqtriick.homes.files.Messages;
-import de.pqtriick.homes.files.Options;
-import de.pqtriick.homes.files.Permissions;
-import de.pqtriick.homes.listener.chat.RenameChat;
+import de.pqtriick.homes.commands.player.AddHomeCommand;
+import de.pqtriick.homes.commands.player.HomeCommand;
+import de.pqtriick.homes.commands.player.RenameCommand;
+import de.pqtriick.homes.data.configs.MessageConfig;
+import de.pqtriick.homes.data.configs.OptionsConfig;
+import de.pqtriick.homes.data.configs.PermissionsConfig;
+import de.pqtriick.homes.database.SQL;
+import de.pqtriick.homes.data.Config;
+import de.pqtriick.homes.data.configs.DatabaseConfig;
+import de.pqtriick.homes.database.SQLMethods;
 import de.pqtriick.homes.listener.compass.NavigationScheduler;
-import de.pqtriick.homes.listener.initalizer.JoinConfig;
 import de.pqtriick.homes.listener.initalizer.VersionInform;
-import de.pqtriick.homes.listener.inventory.*;
+import de.pqtriick.homes.listener.inventory.ActionInventoryClick;
+import de.pqtriick.homes.listener.inventory.DeleteInventoryClick;
+import de.pqtriick.homes.listener.inventory.HomeInventoryClick;
+import de.pqtriick.homes.listener.inventory.SecondSiteInventory;
 import de.pqtriick.homes.utils.Update.VersionCheck;
 import de.pqtriick.homes.utils.bstats.Metrics;
 import org.bukkit.Bukkit;
@@ -26,35 +30,40 @@ public final class Homes extends JavaPlugin {
     public static Homes instance;
     public static boolean hasUpdate;
     private static int bstatsid = 20215;
+    private static SQL sql;
 
     @Override
     public void onEnable() {
         instance = this;
         Config.createDir();
-        Messages.initMessageFile();
-        Options.initOptionsFile();
-        Permissions.initPermsFile();
+        initFiles();
 
-        Bukkit.getPluginManager().registerEvents(new JoinConfig(), this);
-        Bukkit.getPluginManager().registerEvents(new MainInventoryClick(), this);
-        Bukkit.getPluginManager().registerEvents(new DeleteInventory(), this);
-        Bukkit.getPluginManager().registerEvents(new ActionInventory(), this);
-        Bukkit.getPluginManager().registerEvents(new VersionInform(), this);
-        Bukkit.getPluginManager().registerEvents(new AdminInventory(), this);
-        Bukkit.getPluginManager().registerEvents(new MultipleSiteInventory(), this);
-        Bukkit.getPluginManager().registerEvents(new RenameChat(), this);
+        if (Config.getConfiguration(DatabaseConfig.databaseFile).getString("database.enabled").equalsIgnoreCase("true")) {
+            sql = new SQL(Config.getConfiguration(DatabaseConfig.databaseFile).getString("database.host"),
+                    Config.getConfiguration(DatabaseConfig.databaseFile).getString("database.database"),
+                    Config.getConfiguration(DatabaseConfig.databaseFile).getString("database.user"),
+                    Config.getConfiguration(DatabaseConfig.databaseFile).getString("database.password"),
+                    "true");
+            SQLMethods.init();
+        }
 
-        this.getCommand("addhome").setExecutor(new AddHome());
-        this.getCommand("homes").setExecutor(new Homecommand());
-        this.getCommand("checkhomes").setExecutor(new CheckHomes());
-        this.getCommand("reloadvalues").setExecutor(new ReloadValues());
+
+        this.getCommand("addhome").setExecutor(new AddHomeCommand());
+        this.getCommand("homes").setExecutor(new HomeCommand());
+        this.getCommand("rename").setExecutor(new RenameCommand());
+        this.getCommand("addperm").setExecutor(new AddHomePerm());
         this.getCommand("reloadmessages").setExecutor(new ReloadMessages());
-        NavigationScheduler.startScheduler();
+        this.getCommand("reloadperms").setExecutor(new ReloadPerms());
+
+        Bukkit.getPluginManager().registerEvents(new SecondSiteInventory(), this);
+        Bukkit.getPluginManager().registerEvents(new HomeInventoryClick(), this);
+        Bukkit.getPluginManager().registerEvents(new DeleteInventoryClick(), this);
+        Bukkit.getPluginManager().registerEvents(new ActionInventoryClick(), this);
+        Bukkit.getPluginManager().registerEvents(new VersionInform(), this);
         checkUpdate();
+        NavigationScheduler.startScheduler();
         Metrics metrics = new Metrics(this, bstatsid);
 
-        //add max home size for individual players
-        //add multiple sites for homes
 
 
 
@@ -81,4 +90,14 @@ public final class Homes extends JavaPlugin {
         return hasUpdate;
     }
 
+    private void initFiles() {
+        DatabaseConfig.init();
+        OptionsConfig.init();
+        PermissionsConfig.init();
+        MessageConfig.init();
+    }
+
+    public static SQL getSql() {
+        return sql;
+    }
 }

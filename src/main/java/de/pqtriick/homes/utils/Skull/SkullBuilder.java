@@ -1,13 +1,14 @@
 package de.pqtriick.homes.utils.Skull;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -18,26 +19,19 @@ import java.util.UUID;
 
 public class SkullBuilder {
 
-    public static ItemStack getCustomSkull(String url, String name, String... lore) {
+    public static ItemStack getCustomSkull(String texture, String name, String... lore) {
+        final ItemStack head = new ItemStack(Material.PLAYER_HEAD);
 
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-        if (url.isEmpty()) return head;
+        head.editMeta(SkullMeta.class, skullMeta -> {
+            final UUID uuid = UUID.randomUUID();
+            final PlayerProfile playerProfile = Bukkit.createProfile(uuid, uuid.toString().substring(0, 16));
+            playerProfile.setProperty(new ProfileProperty("textures", texture));
 
-        SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-
-        profile.getProperties().put("textures", new Property("textures", url));
-
-        try {
-            Method mtd = skullMeta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
-            mtd.setAccessible(true);
-            mtd.invoke(skullMeta, profile);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-            ex.printStackTrace();
-        }
-        skullMeta.setDisplayName(name);
-        skullMeta.setLore(Arrays.asList(lore));
-        head.setItemMeta(skullMeta);
+            skullMeta.setPlayerProfile(playerProfile);
+            skullMeta.displayName(Component.text(name));
+            skullMeta.setLore(Arrays.asList(lore));
+            head.setItemMeta(skullMeta);
+        });
         return head;
     }
 }

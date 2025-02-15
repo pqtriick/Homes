@@ -1,45 +1,40 @@
 package de.pqtriick.homes.utils;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-
-/**
- * @author pqtriick_
- * @created 19:28, 04.10.2023
- */
+import java.util.List;
 
 public class ItemBuilder {
 
     private ItemStack item;
     private ItemMeta meta;
 
-
-    public ItemBuilder(Material material, short ID) {
-        item = new ItemStack(material, 1, ID);
+    public ItemBuilder(Material material) {
+        item = new ItemStack(material, 1);
         meta = item.getItemMeta();
     }
-    public ItemBuilder(Material material) {
-        this(material, (short) 0);
-    }
-    public ItemBuilder setName(String name) {
-        meta.setDisplayName(name);
+
+    public ItemBuilder name(Component name) {
+        meta.displayName(name);
         return this;
     }
-    public ItemBuilder setLore(String... Lore) {
-        meta.setLore(Arrays.asList(Lore));
-        return this;
 
+    public ItemBuilder lore (List<Component> lore) {
+        meta.lore(lore);
+        return this;
     }
 
-    public ItemBuilder setAmount(int amt) {
-        item.setAmount(amt);
+    public ItemBuilder amount(int amount) {
+        item.setAmount(amount);
         return this;
     }
 
     public ItemStack build() {
+        item.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);
         return item;
     }

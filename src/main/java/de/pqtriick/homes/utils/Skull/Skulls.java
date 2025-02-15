@@ -18,7 +18,7 @@ public enum Skulls {
 
     private final String idTag;
 
-    private Skulls(String texture) {
+    Skulls(String texture) {
         this.idTag = texture;
     }
 

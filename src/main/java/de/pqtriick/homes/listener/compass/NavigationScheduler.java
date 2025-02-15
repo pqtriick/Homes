@@ -1,102 +1,62 @@
 package de.pqtriick.homes.listener.compass;
 
 import de.pqtriick.homes.Homes;
-import de.pqtriick.homes.files.Messages;
-import de.pqtriick.homes.files.Options;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
+import de.pqtriick.homes.data.configs.MessageConfig;
+import de.pqtriick.homes.data.configs.OptionsConfig;
+import de.pqtriick.homes.utils.enums.MessageEnum;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import static de.pqtriick.homes.files.Messages.HOME_REACHED;
-import static de.pqtriick.homes.files.Messages.PREFIX;
-
-/**
- * @author pqtriick_
- * @created 13:37, 07.10.2023
- */
 
 public class NavigationScheduler {
 
-    public static HashMap<Player, Location> navigation = new HashMap<>();
-    private static double distance;
-    private static boolean running;
-    public static String enabled = Options.optionsconfig.getString("options.particle.enabled");
-    public static Particle particle = Particle.valueOf(Options.optionsconfig.getString("options.particle.particle"));
-    public static String delay = Options.optionsconfig.getString("options.particle.delay");
-    public static String spacing = Options.optionsconfig.getString("options.navigation.particle.spacing");
-    public static String length = Options.optionsconfig.getString("options.navigation.particle.length");
-    public static Particle navigationparticle = Particle.valueOf(Options.optionsconfig.getString("options.navigation.particle.particle"));
-
+    public static HashMap<Player, Location> activeNavigation = new HashMap<>();
+    private static Component message;
 
     public static void startScheduler() {
-        if (running) {
-            return;
-        }
-        running = true;
+        if (OptionsConfig.optionsConfig.getString("options.particle.enabled").equalsIgnoreCase("FALSE")) return;
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (navigation.get(all) != null) {
-                        distance = all.getLocation().distanceSquared(navigation.get(all));
-                        String message = "§6" + Math.round(Math.sqrt(distance)) + "§6m";
-                        all.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-                        if (enabled.equalsIgnoreCase("TRUE")) {
-                            circle(navigation.get(all), all, particle);
-                            drawLine(navigation.get(all), all, navigationparticle);
-                        }
-                        if (all.getLocation().distanceSquared(navigation.get(all)) <= 2) {
-                            navigation.remove(all);
-                            HOME_REACHED = HOME_REACHED.replace("&", "§");
-                            PREFIX = PREFIX.replace("&", "§");
-                            all.sendMessage(PREFIX + HOME_REACHED);
-                        }
-
+                for (Player player : activeNavigation.keySet()) {
+                    double distance = player.getLocation().distanceSquared(activeNavigation.get(player));
+                    message = MessageConfig.getMSG(MessageEnum.NAVIGATION_DISTANCE.getPath());
+                    message = message.replaceText(TextReplacementConfig.builder().matchLiteral("<>").replacement(Component.text(Math.round(Math.sqrt(distance)))).build());
+                    player.sendActionBar(message);
+                    circle(activeNavigation.get(player), player, Particle.valueOf(OptionsConfig.optionsConfig.getString("options.particle.particle")));
+                    drawLine(activeNavigation.get(player), player, Particle.valueOf(OptionsConfig.optionsConfig.getString("options.navigation.particle")));
+                    if (player.getLocation().distanceSquared(activeNavigation.get(player)) <= 2) {
+                        activeNavigation.remove(player);
+                        player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.NAVIGATION_REACHED.getPath())));
                     }
                 }
             }
-        }.runTaskTimerAsynchronously(Homes.getInstance(), 0, Integer.parseInt(delay));
+        }.runTaskTimerAsynchronously(Homes.getInstance(), 0, Integer.parseInt(OptionsConfig.optionsConfig.getString("options.particle.spawnDelay")));
     }
 
-    private static void circle(Location loc, Player player, Particle particle) {
-        Location spawner = loc;
-        for (double i=0; i< Math.PI*2; i+=0.1) {
+    private static void circle(Location location, Player player, Particle particle) {
+        for (double i = 0; i < Math.PI*2; i+=0.1) {
             double x = Math.cos(i);
             double z = Math.sin(i);
-            player.spawnParticle(particle, loc.getX()+x, spawner.getY(), spawner.getZ()+z, 0, 0, 0, 0);
-
+            player.spawnParticle(particle, location.getX()+x, location.getY(), location.getZ()+z, 0, 0, 0, 0);
         }
-
     }
 
-    private static void drawLine(Location loc, Player player, Particle particle) {
+    private static void drawLine(Location location, Player player, Particle particle) {
         Location playerloc = player.getLocation();
-        Vector projection = loc.toVector().subtract(playerloc.toVector());
-        for (double i = 0.5; i < Integer.parseInt(length); i+=Double.parseDouble(spacing)) {
+        Vector projection = location.toVector().subtract(player.getLocation().toVector());
+        for (double i = 0.5; i < Integer.parseInt(OptionsConfig.optionsConfig.getString("options.navigation.length")); i += Double.parseDouble(OptionsConfig.optionsConfig.getString("options.navigation.spacing"))) {
             projection.multiply(i);
             playerloc.add(projection);
             player.spawnParticle(particle, playerloc.getX(), playerloc.getY()+1, playerloc.getZ(), 0, 0, 0, 0);
             playerloc.subtract(projection);
             projection.normalize();
-
-
         }
-
-
-
-
     }
-
-
 }

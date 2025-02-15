@@ -1,4 +1,4 @@
-package de.pqtriick.homes.files;
+package de.pqtriick.homes.data;
 
 import de.pqtriick.homes.Homes;
 import org.bukkit.configuration.file.FileConfiguration;
