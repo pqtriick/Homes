@@ -19,11 +19,6 @@ import java.util.List;
 
 public class ConfigurationManager {
 
-
-    public static void initFiles() {
-
-    }
-
     public static void saveHome(Player player, HomeObject home) {
         if (!playerDataExists(player)) {
             createUserData(player);
@@ -47,7 +42,7 @@ public class ConfigurationManager {
     public static List<String> getHomes(Player player) {
         List<String> homes = new ArrayList<>();
         if (!playerDataExists(player) || Config.getConfiguration(getPlayerFile(player)).getConfigurationSection("homes") == null) {
-            return null;
+            return new ArrayList<>();
         } else {
             for (String home : Config.getConfiguration(getPlayerFile(player)).getConfigurationSection("homes").getKeys(false)) {
                 homes.add(home);
@@ -110,7 +105,7 @@ public class ConfigurationManager {
         }
     }
 
-    private static void createUserData(Player player) {
+    public static void createUserData(Player player) {
         File file = getPlayerFile(player);
         Config.createFile(file);
         Config.setDefaults(Config.getConfiguration(file), file, "homeamount", "0");

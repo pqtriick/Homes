@@ -1,7 +1,5 @@
 package de.pqtriick.homes.commands.player;
 
-import de.pqtriick.homes.Homes;
-import de.pqtriick.homes.data.Config;
 import de.pqtriick.homes.data.ConfigurationManager;
 import de.pqtriick.homes.data.configs.MessageConfig;
 import de.pqtriick.homes.data.configs.OptionsConfig;
@@ -17,12 +15,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TextDisplay;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static de.pqtriick.homes.data.ConfigurationManager.createUserData;
+import static de.pqtriick.homes.data.ConfigurationManager.playerDataExists;
 
 public class HomeCommand implements CommandExecutor {
 
@@ -33,8 +33,12 @@ public class HomeCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) commandSender;
         if (!PermissionsConfig.hasPermission(player, "use")) return false;
-        List<String> homes = null;
-        if ((ConfigurationManager.getHomes(player).isEmpty()|| ConfigurationManager.getHomeAmount(player) == 0) || ConfigurationManager.getHomesSQL(player).isEmpty() || ConfigurationManager.getHomeAmountSQL(player) == 0) {
+        if (!playerDataExists(player)) {
+            createUserData(player);
+        }
+        List<String> homes;
+        if ((!ConfigurationManager.isSQLEnabled() && (ConfigurationManager.getHomes(player).isEmpty()|| ConfigurationManager.getHomeAmount(player) == 0))
+            || ConfigurationManager.isSQLEnabled() && (ConfigurationManager.getHomesSQL(player).isEmpty() || ConfigurationManager.getHomeAmountSQL(player) == 0)) {
             player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOMES_NO_HOMES_1.getPath())));
             player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOMES_NO_HOMES_2.getPath())));
         } else {

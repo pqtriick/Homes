@@ -2,7 +2,9 @@ package de.pqtriick.homes.database;
 
 
 import de.pqtriick.homes.Homes;
+import de.pqtriick.homes.data.configs.MessageConfig;
 import de.pqtriick.homes.data.homes.HomeObject;
+import de.pqtriick.homes.utils.enums.MessageEnum;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -63,8 +65,8 @@ public class SQLMethods {
 
     public static void setHomeAmount(Player player, int amount) {
         Homes.getSql().update("UPDATE HomeAmounts SET amount = '" + amount + "' WHERE uuid = '" + player.getUniqueId() + "'");
-        player.sendMessage(Component.text("Sucessfully saved home!"));
-        player.sendMessage(Component.text("You can now access it with /homes"));
+        player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOME_SAVED_SUCCESS_1.getPath())));
+        player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOME_SAVED_SUCCESS_2.getPath())));
     }
 
     public static Integer getHomeAmount(Player player) {
