@@ -1,7 +1,13 @@
 package de.pqtriick.homes.data.homes;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.World;
 
+@AllArgsConstructor
+@Getter
+@Setter
 public class HomeObject {
 
     private String name;
@@ -10,35 +16,4 @@ public class HomeObject {
     private double z;
     private World world;
 
-    public HomeObject(String name, double x, double y, double z, World world) {
-        this.name = name;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.world = world;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public double getZ() {
-        return z;
-    }
-
-    public World getWorld() {
-        return world;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

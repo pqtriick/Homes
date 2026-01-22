@@ -26,14 +26,13 @@ public class SQL {
 
     }
 
-
     public void connect() {
         if (!isConnected()) {
             try {
                 con = DriverManager.getConnection("jdbc:mysql://" + HOST + ":3306/" + DATABASE + "?autoReconnect=" + AUTOCONNECT, USER, PASSWORD);
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("[MySQL] Could not connecto to database! Check your config.");
+                System.out.println("! Could not connect to database! Check your config.");
             }
         }
 
@@ -44,34 +43,25 @@ public class SQL {
             try {
                 con.close();
             } catch (SQLException e) {
+                throw new RuntimeException("! Could not close database connection.");
             }
         }
 
     }
 
-    public void update(String qry) {
-        if (isConnected()) {
-            try {
-                con.createStatement().executeUpdate(qry);
-            } catch (SQLException e) {
-                e.printStackTrace();
+    public Connection getCon() {
+        try {
+            if (con == null || con.isClosed() || !con.isValid(2)) {
+                connect();
             }
+            return con;
+        } catch (SQLException e) {
+            throw new RuntimeException("! Failed to get Connection!");
         }
     }
 
-    public ResultSet getResult(String qry) {
-        if (isConnected()) {
-            try {
-                return con.createStatement().executeQuery(qry);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
-
-    public boolean isConnected() {
+    private boolean isConnected() {
         return con != null;
     }
 }

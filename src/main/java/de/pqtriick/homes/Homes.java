@@ -21,15 +21,18 @@ import de.pqtriick.homes.listener.inventory.HomeInventoryClick;
 import de.pqtriick.homes.listener.inventory.SecondSiteInventory;
 import de.pqtriick.homes.utils.Update.VersionCheck;
 import de.pqtriick.homes.utils.bstats.Metrics;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Homes extends JavaPlugin {
 
+    @Getter
     public static Homes instance;
     public static boolean hasUpdate;
     private static int bstatsid = 20215;
+    @Getter
     private static SQL sql;
 
     @Override
@@ -62,21 +65,13 @@ public final class Homes extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new VersionInform(), this);
         checkUpdate();
         NavigationScheduler.startScheduler();
-        Metrics metrics = new Metrics(this, bstatsid);
-
-
-
-
+        new Metrics(this, bstatsid);
 
     }
 
     @Override
     public void onDisable() {
-
-    }
-
-    public static Homes getInstance() {
-        return instance;
+        sql.close();
     }
 
     public boolean checkUpdate() {
@@ -95,9 +90,5 @@ public final class Homes extends JavaPlugin {
         OptionsConfig.init();
         PermissionsConfig.init();
         MessageConfig.init();
-    }
-
-    public static SQL getSql() {
-        return sql;
     }
 }

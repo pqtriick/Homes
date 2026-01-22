@@ -9,29 +9,48 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class SQLMethods {
 
     public static void init() {
-        Homes.getSql().update("CREATE TABLE IF NOT EXISTS Homes(uuid VARCHAR(36), name VARCHAR(36), x VARCHAR(36), y VARCHAR(36), z VARCHAR(36), world VARCHAR(36))");
-        Homes.getSql().update("CREATE TABLE IF NOT EXISTS HomeAmounts(uuid VARCHAR(36), amount VARCHAR(4))");
+        try {
+            Homes.getSql().getCon().createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS Homes(uuid VARCHAR(36), name VARCHAR(36), x VARCHAR(36), y VARCHAR(36), z VARCHAR(36), world VARCHAR(36))");
+            Homes.getSql().getCon().createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS HomeAmounts(uuid VARCHAR(36), amount VARCHAR(4))");
+        } catch (SQLException e) {
+            throw new RuntimeException("! Failed to create database tables.");
+        }
     }
 
-    public static List<String> getHomes(Player player) {
-        List<String> data = new ArrayList<>();
-        try {
-            ResultSet rs = Homes.getSql().getResult("SELECT name FROM Homes WHERE uuid = '" + player.getUniqueId() + "'");
-            while (rs.next()) {
-                data.add(rs.getString("name"));
+    public static CompletableFuture<List<HomeObject>> getHomes(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<HomeObject> homes = new ArrayList<>();
+            try (PreparedStatement stmt = Homes.getSql().getCon().prepareStatement(
+                    "SELECT name, x, y, z, world FROM Homes WHERE uuid = ? ")) {
+                stmt.setString(1, uuid.toString());
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    homes.add(new HomeObject(rs.getString("name"), rs.getDouble("x"), rs.getDouble("y")),
+                            rs.getDouble("z"), Bukkit.getWorld(rs.getString("world")));
+                }
+                return homes;
+            } catch (SQLException e) {
+                throw new RuntimeException("! Failed to get homes of player (UUID : " + uuid + ")");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return data;
+        });
+
+    }
+
+    public static CompletableFuture<HomeObject> getHomeByName(UUID uuid, String name) {
+        return CompletableFuture.supplyAsync(() -> {
+
+        })
     }
 
     //NOT SURE IF THIS WORK THO
