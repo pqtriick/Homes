@@ -76,11 +76,7 @@ public final class Homes extends JavaPlugin {
 
     public boolean checkUpdate() {
         new VersionCheck(this, 112984).getVersion(version -> {
-            if (this.getDescription().getVersion().equals(version)) {
-                hasUpdate = false;
-            } else {
-                hasUpdate = true;
-            }
+            hasUpdate = this.getDescription().getVersion().equals(version);
         });
         return hasUpdate;
     }
