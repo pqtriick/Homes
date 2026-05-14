@@ -1,27 +1,29 @@
 package de.pqtriick.homes.data.configs;
 
 import de.pqtriick.homes.Homes;
-import de.pqtriick.homes.data.Config;
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
+@Getter
 public class DatabaseConfig {
 
-    public static File databaseFile = new File(Homes.getInstance().getDataFolder().getPath(), "database.yml");
-    public static FileConfiguration databaseConfig = YamlConfiguration.loadConfiguration(databaseFile);
+    private File databaseFile;
+    private FileConfiguration databaseConfig;
 
-    public static void init() {
-
+    public DatabaseConfig() {
+        databaseFile = new File(Homes.getInstance().getDataFolder().getPath(), "database.yml");
         if (!databaseFile.exists()) {
-            Config.createFile(databaseFile);
-            databaseConfig.set("database.enabled", "false");
-            databaseConfig.set("database.host", "localhost");
-            databaseConfig.set("database.database", "homes");
-            databaseConfig.set("database.user", "admin");
-            databaseConfig.set("database.password", "123");
-            Config.saveFile(databaseConfig, databaseFile);
+            Homes.getInstance().getConfigManager().createFile(databaseFile);
         }
+        databaseConfig = YamlConfiguration.loadConfiguration(databaseFile);
+        for (DatabaseConfigEnum entry : DatabaseConfigEnum.values()) {
+            if (!databaseConfig.contains(entry.getPath())) {
+                databaseConfig.set(entry.getPath(), entry.getValue());
+            }
+        }
+        Homes.getInstance().getConfigManager().saveFile(databaseConfig, databaseFile);
     }
 }

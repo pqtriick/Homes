@@ -15,19 +15,21 @@ import java.util.concurrent.CompletableFuture;
 
 public class SQLMethods {
 
-    public static void init() {
+    public SQLMethods() {
         try {
-            Homes.getSql().getCon().createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS Homes(uuid VARCHAR(36), name VARCHAR(36), x VARCHAR(36), y VARCHAR(36), z VARCHAR(36), world VARCHAR(36))");
-            Homes.getSql().getCon().createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS HomeAmounts(uuid VARCHAR(36), amount VARCHAR(4))");
+            Homes.getInstance().getSql().getCon().createStatement().executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS Homes(uuid VARCHAR(36), name VARCHAR(36), x VARCHAR(36), y VARCHAR(36), z VARCHAR(36), world VARCHAR(36))");
+            Homes.getInstance().getSql().getCon().createStatement().executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS HomeAmounts(uuid VARCHAR(36), amount VARCHAR(4))");
         } catch (SQLException e) {
             throw new RuntimeException("! Failed to create database tables.");
         }
     }
 
-    public static CompletableFuture<List<HomeObject>> getHomes(UUID uuid) {
+    public CompletableFuture<List<HomeObject>> getHomes(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
             List<HomeObject> homes = new ArrayList<>();
-            try (PreparedStatement stmt = Homes.getSql().getCon().prepareStatement(
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement(
                     "SELECT name, x, y, z, world FROM Homes WHERE uuid = ? ")) {
                 stmt.setString(1, uuid.toString());
                 ResultSet rs = stmt.executeQuery();
@@ -43,9 +45,9 @@ public class SQLMethods {
 
     }
 
-    public static CompletableFuture<HomeObject> getHomeByName(UUID uuid, String name) {
+    public CompletableFuture<HomeObject> getHomeByName(UUID uuid, String name) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement stmt = Homes.getSql().getCon().prepareStatement("SELECT x, y, z, world FROM Homes WHERE uuid = ? AND name = ?")) {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("SELECT x, y, z, world FROM Homes WHERE uuid = ? AND name = ?")) {
                 stmt.setString(1, uuid.toString());
                 stmt.setString(2, name);
                 ResultSet rs = stmt.executeQuery();
@@ -60,9 +62,9 @@ public class SQLMethods {
         });
     }
 
-    public static CompletableFuture<Boolean> userExists(UUID uuid) {
+    public CompletableFuture<Boolean> userExists(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement stmt = Homes.getSql().getCon().prepareStatement("SELECT uuid FROM Homes WHERE uuid = ?")) {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("SELECT uuid FROM Homes WHERE uuid = ?")) {
                 stmt.setString(1, uuid.toString());
                 ResultSet rs = stmt.executeQuery();
                 return rs.next();
@@ -72,25 +74,21 @@ public class SQLMethods {
         });
     }
 
-    public static CompletableFuture<Void> setHomeAmount(UUID uuid, int amount) {
+    public CompletableFuture<Void> setHomeAmount(UUID uuid, int amount) {
         return CompletableFuture.runAsync(() -> {
-            try (PreparedStatement stmt = Homes.getSql().getCon().prepareStatement("UPDATE HomeAmount SET amount = ? WHERE uuid = ?")) {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("UPDATE HomeAmount SET amount = ? WHERE uuid = ?")) {
                 stmt.setInt(1, amount);
                 stmt.setString(2, uuid.toString());
                 stmt.executeUpdate();
-                /*
-                player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOME_SAVED_SUCCESS_1.getPath())));
-        player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOME_SAVED_SUCCESS_2.getPath())));
-                 */
             } catch (SQLException e) {
                 throw new RuntimeException("! Failed to Update homeamount for player!");
             }
         });
     }
 
-    public static CompletableFuture<Integer> getHomeAmount(UUID uuid) {
+    public CompletableFuture<Integer> getHomeAmount(UUID uuid) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement stmt = Homes.getSql().getCon().prepareStatement("SELECT amount FROM HomeAmount WHERE uuid = ?")) {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("SELECT amount FROM HomeAmount WHERE uuid = ?")) {
                 stmt.setString(1, uuid.toString());
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
@@ -103,9 +101,9 @@ public class SQLMethods {
         });
     }
 
-    public static CompletableFuture<Void> addHome(UUID uuid, String name, double x, double y, double z, String world) {
+    public CompletableFuture<Void> addHome(UUID uuid, String name, double x, double y, double z, String world) {
         return CompletableFuture.runAsync(() -> {
-            try (PreparedStatement stmt = Homes.getSql().getCon().prepareStatement("INSERT INTO Homes(uuid, name, x, y, z, world) VALUES (?, ?, ?, ?, ?, ?)")) {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("INSERT INTO Homes(uuid, name, x, y, z, world) VALUES (?, ?, ?, ?, ?, ?)")) {
                 stmt.setString(1, uuid.toString());
                 stmt.setString(2, name);
                 stmt.setDouble(3, x);
@@ -119,9 +117,9 @@ public class SQLMethods {
         });
     }
 
-    public static CompletableFuture<Void> deleteHome(UUID uuid, String name) {
+    public CompletableFuture<Void> deleteHome(UUID uuid, String name) {
         return CompletableFuture.runAsync(() -> {
-            try (PreparedStatement stmt = Homes.getSql().getCon().prepareStatement("DELETE FROM homes WHERE uuid = ? AND name = ?")) {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("DELETE FROM homes WHERE uuid = ? AND name = ?")) {
                 stmt.setString(1, uuid.toString());
                 stmt.setString(2, name);
             } catch (SQLException e) {

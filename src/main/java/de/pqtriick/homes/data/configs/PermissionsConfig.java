@@ -1,7 +1,6 @@
 package de.pqtriick.homes.data.configs;
 
 import de.pqtriick.homes.Homes;
-import de.pqtriick.homes.data.Config;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -11,60 +10,30 @@ import java.util.HashMap;
 
 public class PermissionsConfig {
 
-    public static File permissionFile = new File(Homes.getInstance().getDataFolder().getPath(), "permissions.yml");
-    public static FileConfiguration permissionsConfig = YamlConfiguration.loadConfiguration(permissionFile);
+    private File permissionFile;
+    private FileConfiguration permissionsConfig;
 
-    public static void init() {
+    public PermissionsConfig() {
+        permissionFile = new File(Homes.getInstance().getDataFolder().getPath(), "permissions.yml");
         if (!permissionFile.exists()) {
-            Config.createFile(permissionFile);
-            permissionsConfig.set("homes.create", "homes.create");
-            permissionsConfig.set("homes.use", "homes.use");
-            permissionsConfig.set("homes.teleport", "homes.teleport");
-            permissionsConfig.set("homes.navigate", "homes.navigate");
-            permissionsConfig.set("homes.admin", "homes.admin");
-            permissionsConfig.set("homes.permissions.enabled", "FALSE");
-            permissionsConfig.set("homes.permissions.default", "40");
-            Config.saveFile(permissionsConfig, permissionFile);
+            Homes.getInstance().getConfigManager().createFile(permissionFile);
         }
+        permissionsConfig = YamlConfiguration.loadConfiguration(permissionFile);
+        for (PermissionsConfigEnum entry : PermissionsConfigEnum.values()) {
+            if (!permissionsConfig.contains(entry.getPath())) {
+                permissionsConfig.set(entry.getPath(), entry.getValue());
+            }
+        }
+        Homes.getInstance().getConfigManager().saveFile(permissionsConfig, permissionFile);
     }
 
-    public static boolean hasPermission(Player player, String perm) {
-        switch (perm) {
-            case "create":
-                if (PermissionsConfig.permissionsConfig.getString("homes.create") == null) {
-                    return true;
-                } else {
-                    return player.hasPermission(PermissionsConfig.permissionsConfig.getString("homes.create"));
-                }
-            case "use":
-                if (PermissionsConfig.permissionsConfig.getString("homes.use") == null) {
-                    return true;
-                } else {
-                    return player.hasPermission(PermissionsConfig.permissionsConfig.getString("homes.use"));
-                }
-            case "teleport":
-                if (PermissionsConfig.permissionsConfig.getString("homes.teleport") == null) {
-                    return true;
-                } else {
-                    return player.hasPermission(PermissionsConfig.permissionsConfig.getString("homes.teleport"));
-                }
-            case "navigate":
-                if (PermissionsConfig.permissionsConfig.getString("homes.navigate") == null) {
-                    return true;
-                } else {
-                    return player.hasPermission(PermissionsConfig.permissionsConfig.getString("homes.navigate"));
-                }
-            case "admin":
-                if (PermissionsConfig.permissionsConfig.getString("homes.admin") == null) {
-                    return true;
-                } else {
-                    return player.hasPermission(PermissionsConfig.permissionsConfig.getString("homes.admin"));
-                }
-        }
-        return false;
+
+    public boolean hasPermission(Player player, PermissionsConfigEnum perm) {
+        if (permissionsConfig.getString(perm.getPath()) == null) return true;
+        return player.hasPermission(permissionsConfig.getString(perm.getPath()));
     }
 
-    public static Integer getHomeAmountForPlayer(Player player) {
+    public Integer getHomeAmountForPlayer(Player player) {
         HashMap<String, Integer> permMap = new HashMap<>();
         for (String rank : permissionsConfig.getConfigurationSection("homes.permissions").getKeys(true)) {
             if (!rank.equalsIgnoreCase("enabled")) {
@@ -81,11 +50,12 @@ public class PermissionsConfig {
         return x;
     }
 
-    public static void addNewPerm(String name, int amount) {
+    public void addNewPerm(String name, int amount) {
         permissionsConfig.set("homes.permissions." + name, amount);
+        Homes.getInstance().getConfigManager().saveFile(permissionsConfig, permissionFile);
     }
 
-    public static boolean isEnabled() {
-        return permissionsConfig.getString("homes.permissions.enabled").equalsIgnoreCase("TRUE");
+    public boolean isEnabled() {
+        return permissionsConfig.getString(PermissionsConfigEnum.PERM_HOME_PERMENABLED.getPath()).equalsIgnoreCase("TRUE");
     }
 }
