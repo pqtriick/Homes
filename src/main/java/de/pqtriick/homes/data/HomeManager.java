@@ -35,6 +35,9 @@ public class HomeManager {
             configuration.set("homes." + object.getName() + ".Z", String.valueOf(object.getZ()));
             configuration.set("homes." + object.getName() + ".world", object.getWorld().getName());
             Homes.getInstance().getConfigManager().saveFile(configuration, Homes.getInstance().getHomeManager().getPlayerFile(player));
+            Homes.getInstance().getHomeManager().setHomeAmount(player, Homes.getInstance().getHomeManager().getHomeAmount(player)+1);
+            player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOME_SAVED_SUCCESS_1.getPath()));
+            player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOME_SAVED_SUCCESS_2.getPath()));
         }
     }
 

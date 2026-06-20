@@ -24,6 +24,7 @@ import java.util.List;
 public class HomeCommand implements CommandExecutor {
 
     public static Inventory inventory;
+    public static Inventory secondInventory;
     public static HashMap<Player, Inventory> secondSiteInv = new HashMap<>();
 
     @Override
@@ -43,15 +44,16 @@ public class HomeCommand implements CommandExecutor {
         message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%homes%").replacement(Component.text(homes.size())).build());
         message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%maxhomes%").replacement(Component.text(Homes.getInstance().getHomeManager().getMaxHomes(player))).build());
         inventory = Bukkit.createInventory(null, 5 * 9, message);
-        Inventory secondInventory = Bukkit.createInventory(null, 5 * 9, message);
+        secondInventory = Bukkit.createInventory(null, 5 * 9, message);
         for (int i = 0; i < homes.size(); i++) {
-            if (i < 43) {
+            if (i < 44) {
                 inventory.setItem(i, new ItemBuilder(Material.getMaterial(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i).getName())).lore(
                         List.of(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_ACCESS.getPath()), Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_DELETE.getPath()))).build());
             } else if (i == 44) {
                 inventory.setItem(44, new ItemBuilder(Material.LIME_STAINED_GLASS).name(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_NEXT_SITE.getPath())).build());
             } else {
-                secondInventory.setItem(i - 44, new ItemBuilder(Material.getMaterial(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i).getName())).build());
+                secondInventory.setItem(i-45, new ItemBuilder(Material.getMaterial(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i).getName())).lore(
+                        List.of(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_ACCESS.getPath()), Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_DELETE.getPath()))).build());
             }
             if (!secondInventory.isEmpty()) secondSiteInv.put(player, secondInventory);
         }

@@ -29,9 +29,6 @@ public class AddHomeCommand implements CommandExecutor {
         }
         HomeObject object = new HomeObject(args[0], player.getX(), player.getY(), player.getZ(), player.getWorld());
         Homes.getInstance().getHomeManager().saveHome(player, object);
-        Homes.getInstance().getHomeManager().setHomeAmount(player, Homes.getInstance().getHomeManager().getHomeAmount(player)+1);
-        player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOME_SAVED_SUCCESS_1.getPath()));
-        player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOME_SAVED_SUCCESS_2.getPath()));
         return false;
     }
 }
