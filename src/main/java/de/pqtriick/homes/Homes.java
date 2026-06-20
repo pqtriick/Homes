@@ -8,6 +8,7 @@ import de.pqtriick.homes.commands.player.HomeCommand;
 import de.pqtriick.homes.commands.player.RenameCommand;
 import de.pqtriick.homes.data.HomeManager;
 import de.pqtriick.homes.data.configs.DatabaseConfigEnum;
+import de.pqtriick.homes.data.configs.HomeGUIConfig;
 import de.pqtriick.homes.data.configs.MessageConfig;
 import de.pqtriick.homes.data.configs.MessageEnum;
 import de.pqtriick.homes.data.configs.OptionsConfig;
@@ -43,6 +44,7 @@ public final class Homes extends JavaPlugin {
     private Config configManager;
     private DatabaseConfig dbConfig;
     private OptionsConfig optionsConfig;
+    private HomeGUIConfig guiConfig;
     @Setter
     private PermissionsConfig permissionConfig;
     private MessageConfig messageConfig;
@@ -82,6 +84,7 @@ public final class Homes extends JavaPlugin {
         optionsConfig = new OptionsConfig();
         permissionConfig = new PermissionsConfig();
         messageConfig = new MessageConfig();
+        guiConfig = new HomeGUIConfig();
         PREFIX = messageConfig.getMSG(MessageEnum.PREFIX.getPath());
     }
 

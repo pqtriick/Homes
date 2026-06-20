@@ -2,11 +2,13 @@ package de.pqtriick.homes.listener.inventory;
 
 import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.commands.player.RenameCommand;
+import de.pqtriick.homes.data.configs.HomeGUIConfigEnum;
 import de.pqtriick.homes.data.configs.MessageEnum;
 import de.pqtriick.homes.data.configs.PermissionsConfigEnum;
 import de.pqtriick.homes.data.homes.HomeObject;
 import de.pqtriick.homes.utils.ItemBuilder;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,12 +50,15 @@ public class ActionInventoryClick implements Listener {
 
     public static void openActionInventory(Player player) {
         actionInv = Bukkit.createInventory(null, 1*9, Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_TITLE.getPath()));
-        for (int i = 0; i < 8; i++) {
-            actionInv.setItem(i, new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(Component.text("")).build());
-        }
-        actionInv.setItem(1, new ItemBuilder(Material.ENDER_EYE).name(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_TELEPORT.getPath())).build());
-        actionInv.setItem(4, new ItemBuilder(Material.NAME_TAG).name(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_RENAME.getPath())).build());
-        actionInv.setItem(7, new ItemBuilder(Material.RECOVERY_COMPASS).name(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_NAVIGATE.getPath())).build());
+        setGuiItem(actionInv, 0, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_1.getPath()).toUpperCase(), Component.text(""));
+        setGuiItem(actionInv, 1, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_2.getPath()).toUpperCase(), Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_TELEPORT.getPath()));
+        setGuiItem(actionInv, 2, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_3.getPath()).toUpperCase(), Component.text(""));
+        setGuiItem(actionInv, 3, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_4.getPath()).toUpperCase(), Component.text(""));
+        setGuiItem(actionInv, 4, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_5.getPath()).toUpperCase(), Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_RENAME.getPath()));
+        setGuiItem(actionInv, 5, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_6.getPath()).toUpperCase(), Component.text(""));
+        setGuiItem(actionInv, 6, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_7.getPath()).toUpperCase(), Component.text(""));
+        setGuiItem(actionInv, 7, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_8.getPath()).toUpperCase(), Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_NAVIGATE.getPath()));
+        setGuiItem(actionInv, 8, Homes.getInstance().getGuiConfig().getHomeGUIConfig().getString(HomeGUIConfigEnum.SLOT_9.getPath()).toUpperCase(), Component.text(""));
         player.openInventory(actionInv);
     }
 
@@ -87,5 +92,14 @@ public class ActionInventoryClick implements Listener {
         obj = Homes.getInstance().getHomeManager().getHomeByString(player, currentSelection.get(player));
         Homes.getInstance().getNavigationScheduler().activeNavigation.put(player, new Location(obj.getWorld(), obj.getX(), obj.getY(), obj.getZ()));
         player.closeInventory();
+    }
+
+    private static void setGuiItem(Inventory inv, int slot, String materialName, Component name) {
+        Material material = Material.matchMaterial(materialName);
+        if (material == null || material == Material.AIR) {
+            inv.setItem(slot, null);
+            return;
+        }
+        inv.setItem(slot, new ItemBuilder(material).name(name).build());
     }
 }
