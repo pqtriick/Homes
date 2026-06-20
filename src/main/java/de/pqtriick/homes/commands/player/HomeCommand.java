@@ -1,11 +1,10 @@
 package de.pqtriick.homes.commands.player;
 
-import de.pqtriick.homes.data.ConfigurationManager;
-import de.pqtriick.homes.data.configs.MessageConfig;
-import de.pqtriick.homes.data.configs.OptionsConfig;
-import de.pqtriick.homes.data.configs.PermissionsConfig;
+import de.pqtriick.homes.Homes;
+import de.pqtriick.homes.data.configs.MessageEnum;
+import de.pqtriick.homes.data.configs.PermissionsConfigEnum;
+import de.pqtriick.homes.data.homes.HomeObject;
 import de.pqtriick.homes.utils.ItemBuilder;
-import de.pqtriick.homes.utils.enums.MessageEnum;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.Bukkit;
@@ -17,57 +16,49 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static de.pqtriick.homes.data.ConfigurationManager.createUserData;
-import static de.pqtriick.homes.data.ConfigurationManager.playerDataExists;
-
 public class HomeCommand implements CommandExecutor {
 
     public static Inventory inventory;
+    public static Inventory secondInventory;
     public static HashMap<Player, Inventory> secondSiteInv = new HashMap<>();
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        Player player = (Player) commandSender;
-        if (!PermissionsConfig.hasPermission(player, "use")) return false;
-        if (!playerDataExists(player)) {
-            createUserData(player);
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NonNull @NotNull String[] args) {
+        Player player = (Player) sender;
+        if (!Homes.getInstance().getPermissionConfig().hasPermission(player, PermissionsConfigEnum.PERM_HOME_USE)) {
+            player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.NO_PERMISSION.getPath()));
+            return false;
         }
-        List<String> homes;
-        if ((!ConfigurationManager.isSQLEnabled() && (ConfigurationManager.getHomes(player).isEmpty()|| ConfigurationManager.getHomeAmount(player) == 0))
-            || ConfigurationManager.isSQLEnabled() && (ConfigurationManager.getHomesSQL(player).isEmpty() || ConfigurationManager.getHomeAmountSQL(player) == 0)) {
-            player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOMES_NO_HOMES_1.getPath())));
-            player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOMES_NO_HOMES_2.getPath())));
-        } else {
-            if (!ConfigurationManager.isSQLEnabled()) {
-                homes = ConfigurationManager.getHomes(player);
+        if (Homes.getInstance().getHomeManager().getHomeAmount(player) == 0 || Homes.getInstance().getHomeManager().getHomes(player).isEmpty()) {
+            player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_NO_HOMES_1.getPath()));
+            player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_NO_HOMES_2.getPath()));
+            return false;
+        }
+        List<HomeObject> homes = Homes.getInstance().getHomeManager().getHomes(player);
+        Component message = Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_TITLE.getPath());
+        message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%homes%").replacement(Component.text(homes.size())).build());
+        message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%maxhomes%").replacement(Component.text(Homes.getInstance().getHomeManager().getMaxHomes(player))).build());
+        inventory = Bukkit.createInventory(null, 5 * 9, message);
+        secondInventory = Bukkit.createInventory(null, 5 * 9, message);
+        for (int i = 0; i < homes.size(); i++) {
+            if (i < 44) {
+                inventory.setItem(i, new ItemBuilder(Material.getMaterial(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i).getName())).lore(
+                        List.of(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_ACCESS.getPath()), Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_DELETE.getPath()))).build());
+            } else if (i == 44) {
+                inventory.setItem(44, new ItemBuilder(Material.LIME_STAINED_GLASS).name(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_NEXT_SITE.getPath())).build());
             } else {
-                homes = ConfigurationManager.getHomesSQL(player);
+                secondInventory.setItem(i-45, new ItemBuilder(Material.getMaterial(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i).getName())).lore(
+                        List.of(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_ACCESS.getPath()), Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_DELETE.getPath()))).build());
             }
-            if (!homes.isEmpty()) {
-                Component message = MessageConfig.getMSG(MessageEnum.HOMES_GUI_TITLE.getPath());
-                message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%homes%").replacement(Component.text(homes.size())).build());
-                message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%maxhomes%").replacement(Component.text(ConfigurationManager.getMaxHomes(player))).build());
-                inventory = Bukkit.createInventory(null, 5 * 9, message);
-                Inventory secondInventory = Bukkit.createInventory(null, 5 * 9, message);
-                for (int i = 0; i < homes.size(); i++) {
-                    if (i < 43) {
-                        inventory.setItem(i, new ItemBuilder(Material.getMaterial(OptionsConfig.optionsConfig.getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i))).lore(
-                                List.of(MessageConfig.getMSG(MessageEnum.HOMES_GUI_ACCESS.getPath()), MessageConfig.getMSG(MessageEnum.HOMES_GUI_DELETE.getPath()))).build());
-                    } else if (i == 44) {
-                        inventory.setItem(44, new ItemBuilder(Material.LIME_STAINED_GLASS).name(MessageConfig.getMSG(MessageEnum.HOMES_GUI_NEXT_SITE.getPath())).build());
-                    } else {
-                        secondInventory.setItem(i - 44, new ItemBuilder(Material.getMaterial(OptionsConfig.optionsConfig.getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i))).build());
-                    }
-                    if (!secondInventory.isEmpty()) secondSiteInv.put(player, secondInventory);
-                }
-                player.openInventory(inventory);
-                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 0);
-            }
+            if (!secondInventory.isEmpty()) secondSiteInv.put(player, secondInventory);
         }
+        player.openInventory(inventory);
+        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 0);
         return false;
     }
 }

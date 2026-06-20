@@ -2,90 +2,129 @@ package de.pqtriick.homes.database;
 
 
 import de.pqtriick.homes.Homes;
-import de.pqtriick.homes.data.configs.MessageConfig;
 import de.pqtriick.homes.data.homes.HomeObject;
-import de.pqtriick.homes.utils.enums.MessageEnum;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class SQLMethods {
 
-    public static void init() {
-        Homes.getSql().update("CREATE TABLE IF NOT EXISTS Homes(uuid VARCHAR(36), name VARCHAR(36), x VARCHAR(36), y VARCHAR(36), z VARCHAR(36), world VARCHAR(36))");
-        Homes.getSql().update("CREATE TABLE IF NOT EXISTS HomeAmounts(uuid VARCHAR(36), amount VARCHAR(4))");
-    }
-
-    public static List<String> getHomes(Player player) {
-        List<String> data = new ArrayList<>();
+    public SQLMethods() {
         try {
-            ResultSet rs = Homes.getSql().getResult("SELECT name FROM Homes WHERE uuid = '" + player.getUniqueId() + "'");
-            while (rs.next()) {
-                data.add(rs.getString("name"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
-
-    //NOT SURE IF THIS WORK THO
-    public static HomeObject getHomeByName(Player player, String name) {
-        try {
-            ResultSet rs = Homes.getSql().getResult("SELECT * FROM Homes WHERE uuid = '" + player.getUniqueId() + "' AND name = '" + name + "'");
-            while (rs.next()) {
-                return new HomeObject(name, Double.parseDouble(rs.getString("x")),
-                        Double.parseDouble(rs.getString("y")),
-                        Double.parseDouble(rs.getString("z")),
-                       Bukkit.getWorld(rs.getString("world")));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static boolean userExists(Player player) {
-        try {
-            ResultSet rs = Homes.getSql().getResult("SELECT uuid FROM Homes WHERE uuid = '" + player.getUniqueId() + "'");
-            while (rs.next()) {
-                return rs.getString("uuid") != null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
-    public static void setHomeAmount(Player player, int amount) {
-        Homes.getSql().update("UPDATE HomeAmounts SET amount = '" + amount + "' WHERE uuid = '" + player.getUniqueId() + "'");
-        player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOME_SAVED_SUCCESS_1.getPath())));
-        player.sendMessage(MessageConfig.getMSG(MessageEnum.PREFIX.getPath()).append(MessageConfig.getMSG(MessageEnum.HOME_SAVED_SUCCESS_2.getPath())));
-    }
-
-    public static Integer getHomeAmount(Player player) {
-        try {
-            ResultSet rs = Homes.getSql().getResult("SELECT amount FROM HomeAmounts WHERE uuid = '" + player.getUniqueId() + "'");
-            while (rs.next()) {
-                return Integer.parseInt(rs.getString("amount"));
-            }
+            Homes.getInstance().getSql().getCon().createStatement().executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS Homes(uuid VARCHAR(36), name VARCHAR(36), x VARCHAR(36), y VARCHAR(36), z VARCHAR(36), world VARCHAR(36))");
+            Homes.getInstance().getSql().getCon().createStatement().executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS HomeAmounts(uuid VARCHAR(36), amount VARCHAR(4))");
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("! Failed to create database tables.");
         }
-        return -1;
     }
 
-    public static void addHome(Player player, String name, double x, double y, double z, String world) {
-        Homes.getSql().update("INSERT INTO Homes (uuid, name, x, y, z, world) VALUES ('" + player.getUniqueId() + "','" + name + "','" + x + "', '" + y + "', '" + z +"', '" + world + "')");
+    public CompletableFuture<List<HomeObject>> getHomes(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<HomeObject> homes = new ArrayList<>();
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement(
+                    "SELECT name, x, y, z, world FROM Homes WHERE uuid = ? ")) {
+                stmt.setString(1, uuid.toString());
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    homes.add(new HomeObject(rs.getString("name"), rs.getDouble("x"), rs.getDouble("y"),
+                            rs.getDouble("z"), Bukkit.getWorld(rs.getString("world"))));
+                }
+                return homes;
+            } catch (SQLException e) {
+                throw new RuntimeException("! Failed to get homes of player (UUID : " + uuid + ")");
+            }
+        });
+
     }
 
-    public static void deleteHome(Player player, String name) {
-        Homes.getSql().update("DELETE FROM Homes WHERE uuid = '" + player.getUniqueId() + "' AND name = '" + name + "'");
+    public CompletableFuture<HomeObject> getHomeByName(UUID uuid, String name) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("SELECT x, y, z, world FROM Homes WHERE uuid = ? AND name = ?")) {
+                stmt.setString(1, uuid.toString());
+                stmt.setString(2, name);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    return new HomeObject(name, rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"),
+                            Bukkit.getWorld("world"));
+                }
+                return null;
+            } catch (SQLException e) {
+                throw new RuntimeException("! Failed to get home by name of player!");
+            }
+        });
+    }
+
+    public CompletableFuture<Boolean> userExists(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("SELECT uuid FROM Homes WHERE uuid = ?")) {
+                stmt.setString(1, uuid.toString());
+                ResultSet rs = stmt.executeQuery();
+                return rs.next();
+            } catch (SQLException e) {
+                throw new RuntimeException("! Failed to check if user exists!");
+            }
+        });
+    }
+
+    public CompletableFuture<Void> setHomeAmount(UUID uuid, int amount) {
+        return CompletableFuture.runAsync(() -> {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("UPDATE HomeAmount SET amount = ? WHERE uuid = ?")) {
+                stmt.setInt(1, amount);
+                stmt.setString(2, uuid.toString());
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException("! Failed to Update homeamount for player!");
+            }
+        });
+    }
+
+    public CompletableFuture<Integer> getHomeAmount(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("SELECT amount FROM HomeAmount WHERE uuid = ?")) {
+                stmt.setString(1, uuid.toString());
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getInt("amount");
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("! Failed to get Homeamount of player!");
+            }
+            return -1;
+        });
+    }
+
+    public CompletableFuture<Void> addHome(UUID uuid, String name, double x, double y, double z, String world) {
+        return CompletableFuture.runAsync(() -> {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("INSERT INTO Homes(uuid, name, x, y, z, world) VALUES (?, ?, ?, ?, ?, ?)")) {
+                stmt.setString(1, uuid.toString());
+                stmt.setString(2, name);
+                stmt.setDouble(3, x);
+                stmt.setDouble(4, y);
+                stmt.setDouble(5, z);
+                stmt.setString(6, world);
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException("! Failed to insert new Home into database!");
+            }
+        });
+    }
+
+    public CompletableFuture<Void> deleteHome(UUID uuid, String name) {
+        return CompletableFuture.runAsync(() -> {
+            try (PreparedStatement stmt = Homes.getInstance().getSql().getCon().prepareStatement("DELETE FROM homes WHERE uuid = ? AND name = ?")) {
+                stmt.setString(1, uuid.toString());
+                stmt.setString(2, name);
+            } catch (SQLException e) {
+                throw new RuntimeException("! Failed to delete home of player from database!");
+            }
+        });
     }
 }
