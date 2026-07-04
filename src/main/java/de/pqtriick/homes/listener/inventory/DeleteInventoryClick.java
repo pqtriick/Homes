@@ -39,7 +39,7 @@ public class DeleteInventoryClick implements Listener {
 
     public static void openDeleteInventory(Player player) {
         confirmDeletion = Bukkit.createInventory(null, 1*9, Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_DELETE_TITLE.getPath()));
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < confirmDeletion.getSize(); i++) {
             confirmDeletion.setItem(i, new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(Component.text("§7")).build());
         }
         confirmDeletion.setItem(1, new ItemBuilder(Material.GREEN_CONCRETE).name(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_DELETE_CONFIRM.getPath())).build());

@@ -74,6 +74,7 @@ public class HomeManager {
             File file = getPlayerFile(player);
             FileConfiguration configuration = Homes.getInstance().getConfigManager().getConfiguration(file);
             Homes.getInstance().getConfigManager().set(configuration, file, "homes." + name, null);
+            Homes.getInstance().getConfigManager().set(configuration, file, "homeamount", String.valueOf(getHomeAmount(player)-1));
             Homes.getInstance().getConfigManager().saveFile(configuration, Homes.getInstance().getHomeManager().getPlayerFile(player));
         }
     }
