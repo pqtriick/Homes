@@ -26,6 +26,7 @@ public class AddHomeCommand implements CommandExecutor {
         }
         if (Homes.getInstance().getHomeManager().hasSpace(player)) {
             player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_NO_SPACE.getPath()));
+            return false;
         }
         HomeObject object = new HomeObject(args[0], player.getX(), player.getY(), player.getZ(), player.getWorld());
         Homes.getInstance().getHomeManager().saveHome(player, object);

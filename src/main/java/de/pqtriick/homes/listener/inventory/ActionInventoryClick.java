@@ -4,6 +4,8 @@ import de.pqtriick.homes.Homes;
 import de.pqtriick.homes.commands.player.RenameCommand;
 import de.pqtriick.homes.data.configs.HomeGUIConfigEnum;
 import de.pqtriick.homes.data.configs.MessageEnum;
+import de.pqtriick.homes.data.configs.OptionsConfig;
+import de.pqtriick.homes.data.configs.OptionsConfigEnum;
 import de.pqtriick.homes.data.configs.PermissionsConfigEnum;
 import de.pqtriick.homes.data.homes.HomeObject;
 import de.pqtriick.homes.utils.ItemBuilder;
@@ -17,13 +19,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 
 public class ActionInventoryClick implements Listener {
 
     public static HashMap<Player, String> currentSelection = new HashMap<>();
+    private static HashMap<Player, BukkitTask> teleportDelayMap = new HashMap<>();
     private static Inventory actionInv;
 
     @EventHandler
@@ -45,7 +51,16 @@ public class ActionInventoryClick implements Listener {
             }
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1, 0);
         }
+    }
 
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        if (Homes.getInstance().getOptionsConfig().getOptionsConfig().get(OptionsConfigEnum.OPTIONS_TPDELAY_CANCELONMOVE.getPath()).equals("false")) return;
+        Player player = event.getPlayer();
+        if (!teleportDelayMap.containsKey(player)) return;
+        teleportDelayMap.get(player).cancel();
+        teleportDelayMap.remove(player);
+        player.sendMessage(Component.text("§cTeleport to Home cancelled because you moved from your previous position."));
     }
 
     public static void openActionInventory(Player player) {
@@ -70,6 +85,35 @@ public class ActionInventoryClick implements Listener {
         }
         home = Homes.getInstance().getHomeManager().getHomeByString(player, currentSelection.get(player));
         player.closeInventory();
+        if (Homes.getInstance().getOptionsConfig().getOptionsConfig().get(OptionsConfigEnum.OPTIONS_TPDELAY_ENABLED.getPath()).equals("true")) {
+            try {
+                int delayInSec = Integer.parseInt(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString(OptionsConfigEnum.OPTIONS_TPDELAY_DELAY.getPath()));
+                if (teleportDelayMap.containsKey(player)) {
+                    teleportDelayMap.get(player).cancel();
+                }
+                BukkitTask tpRunnable = new BukkitRunnable() {
+                    int times = delayInSec;
+                    @Override
+                    public void run() {
+                        if (times == 0) {
+                            player.teleport(new Location(home.getWorld(), home.getX(), home.getY(), home.getZ()));
+                            player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.PREFIX.getPath()).append(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_TELEPORT_SUCCESS.getPath())));
+                            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 2);
+                            currentSelection.remove(player);
+                            this.cancel();
+                            teleportDelayMap.remove(player);
+                        } else {
+                            player.sendActionBar(Component.text("§2You will be teleported in §a" + times + " Seconds."));
+                            times--;
+                        }
+                    }
+                }.runTaskTimer(Homes.getInstance(), 0, 20L);
+                teleportDelayMap.put(player, tpRunnable);
+                return;
+            } catch (Exception e) {
+                System.out.println("{HOMES ERROR} Variable delay for teleport is not an Integer!");
+            }
+        }
         player.teleport(new Location(home.getWorld(), home.getX(), home.getY(), home.getZ()));
         player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.PREFIX.getPath()).append(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.ACTION_GUI_TELEPORT_SUCCESS.getPath())));
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 2);

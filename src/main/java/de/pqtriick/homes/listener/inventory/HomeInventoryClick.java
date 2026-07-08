@@ -18,7 +18,7 @@ public class HomeInventoryClick implements Listener {
     public void onClick(InventoryClickEvent event) {
         if (event.getClickedInventory() == null || event.getCurrentItem() == null) return;
         Player player = (Player) event.getWhoClicked();
-        if (event.getView().getTopInventory().equals(HomeCommand.inventory) || event.getView().getTopInventory().equals(HomeCommand.secondInventory)) {
+        if (event.getView().getTopInventory().equals(HomeCommand.firstSiteInv.get(player)) || event.getView().getTopInventory().equals(HomeCommand.secondSiteInv.get(player))) {
             event.setCancelled(true);
             Material homeBlock = Material.getMaterial(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString("options.homes.block").toUpperCase());
             if (event.getRawSlot() == 44 && !event.getClickedInventory().getItem(event.getRawSlot()).isEmpty() && !event.getClickedInventory().getItem(event.getRawSlot()).getType().equals(homeBlock)) {

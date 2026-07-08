@@ -23,8 +23,7 @@ import java.util.List;
 
 public class HomeCommand implements CommandExecutor {
 
-    public static Inventory inventory;
-    public static Inventory secondInventory;
+    public static HashMap<Player, Inventory> firstSiteInv = new HashMap<>();
     public static HashMap<Player, Inventory> secondSiteInv = new HashMap<>();
 
     @Override
@@ -43,8 +42,8 @@ public class HomeCommand implements CommandExecutor {
         Component message = Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_TITLE.getPath());
         message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%homes%").replacement(Component.text(homes.size())).build());
         message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%maxhomes%").replacement(Component.text(Homes.getInstance().getHomeManager().getMaxHomes(player))).build());
-        inventory = Bukkit.createInventory(null, 5 * 9, message);
-        secondInventory = Bukkit.createInventory(null, 5 * 9, message);
+        Inventory inventory = Bukkit.createInventory(null, 5 * 9, message);
+        Inventory secondInventory = Bukkit.createInventory(null, 5 * 9, message);
         for (int i = 0; i < homes.size(); i++) {
             if (i < 44) {
                 inventory.setItem(i, new ItemBuilder(Material.getMaterial(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i).getName())).lore(
@@ -55,8 +54,9 @@ public class HomeCommand implements CommandExecutor {
                 secondInventory.setItem(i-45, new ItemBuilder(Material.getMaterial(Homes.getInstance().getOptionsConfig().getOptionsConfig().getString("options.homes.block").toUpperCase())).name(Component.text(homes.get(i).getName())).lore(
                         List.of(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_ACCESS.getPath()), Homes.getInstance().getMessageConfig().getMSG(MessageEnum.HOMES_GUI_DELETE.getPath()))).build());
             }
-            if (!secondInventory.isEmpty()) secondSiteInv.put(player, secondInventory);
         }
+        secondSiteInv.put(player, inventory);
+        firstSiteInv.put(player, inventory);
         player.openInventory(inventory);
         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 0);
         return false;

@@ -14,7 +14,7 @@ public class SecondSiteInventory implements Listener {
     public void onClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getClickedInventory() == null) return;
         Player player = (Player) event.getWhoClicked();
-        if (event.getView().getTopInventory().equals(HomeCommand.inventory)) {
+        if (event.getView().getTopInventory().equals(HomeCommand.firstSiteInv.get(player))) {
             event.setCancelled(true);
             if (event.getCurrentItem().equals(Material.LIME_STAINED_GLASS_PANE)) {
                 player.openInventory(HomeCommand.secondSiteInv.get(player));

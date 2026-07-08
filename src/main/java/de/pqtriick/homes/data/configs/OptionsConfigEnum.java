@@ -15,7 +15,10 @@ public enum OptionsConfigEnum {
     OPTIONS_NAVIPARTICLE_LENGTH("options.navigation.length", "5"),
     OPTIONS_NAVIPARTICLE("options.navigation.particle", "SOUL_FIRE_FLAME"),
     OPTIONS_HOME_MAXHOMES("options.homes.maxhomes", "99"),
-    OPTIONS_HOMES_BLOCK("options.homes.block", "CYAN_BED");
+    OPTIONS_HOMES_BLOCK("options.homes.block", "CYAN_BED"),
+    OPTIONS_TPDELAY_ENABLED("options.teleportdelay.enabled", "false"),
+    OPTIONS_TPDELAY_CANCELONMOVE("options.teleportdelay.cancelonmove", "true"),
+    OPTIONS_TPDELAY_DELAY("options.teleportdelay.seconds", "3");
 
     final String path;
     final String value;
