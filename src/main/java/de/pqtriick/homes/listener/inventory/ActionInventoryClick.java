@@ -10,6 +10,7 @@ import de.pqtriick.homes.data.configs.PermissionsConfigEnum;
 import de.pqtriick.homes.data.homes.HomeObject;
 import de.pqtriick.homes.utils.ItemBuilder;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -60,7 +61,7 @@ public class ActionInventoryClick implements Listener {
         if (!teleportDelayMap.containsKey(player)) return;
         teleportDelayMap.get(player).cancel();
         teleportDelayMap.remove(player);
-        player.sendMessage(Component.text("§cTeleport to Home cancelled because you moved from your previous position."));
+        player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.TELPORT_ACTIONBAR_CANCEL.getPath()));
     }
 
     public static void openActionInventory(Player player) {
@@ -103,7 +104,9 @@ public class ActionInventoryClick implements Listener {
                             this.cancel();
                             teleportDelayMap.remove(player);
                         } else {
-                            player.sendActionBar(Component.text("§2You will be teleported in §a" + times + " Seconds."));
+                            Component message = Homes.getInstance().getMessageConfig().getMSG(MessageEnum.TELEPORT_ACTIONBAR.getPath());
+                            message = message.replaceText(TextReplacementConfig.builder().matchLiteral("%seconds%").replacement(Component.text(times)).build());
+                            player.sendActionBar(message);
                             times--;
                         }
                     }

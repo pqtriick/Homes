@@ -47,7 +47,8 @@ public enum MessageEnum {
     RENAME_WRONG_INPUT("messages.rename_wrong_input", "§cYou can't use spaces or leave it empty! Use _ Instead"),
     RENAME_CANCELLED("messages.rename_cancelled", "§aSuccessfully cancelled renaming"),
     RENAME_SUCCESS("messages.rename_success", "§aSuccessfully renamed home"),
-
+    TELEPORT_ACTIONBAR("messages.teleport.actionbar", "§6Teleporting in §e%seconds% §6seconds!"),
+    TELPORT_ACTIONBAR_CANCEL("messages.teleport.actionbar.cancel", "§cTeleporting to home cancelled because you moved!"),
     USAGE_ADDHOME("messages.usage_addhome", "§cWrong Usage! /addhome <name>"),
     USAGE_RENAMEHOME("messages.usage_renamehome", "§cWrong Usage! /rename <name>"),
     ;
