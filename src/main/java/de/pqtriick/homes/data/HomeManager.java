@@ -126,12 +126,16 @@ public class HomeManager {
     public boolean hasSpace(Player player) {
         int maxspace = getMaxHomes(player);
         int amount = getHomeAmount(player);
+        System.out.println(maxspace);
+        System.out.println(amount);
         if (Homes.getInstance().getPermissionConfig().isEnabled()) {
             maxspace = Homes.getInstance().getPermissionConfig().getHomeAmountForPlayer(player);
         }
         if (isSQLEnabled()) {
             amount = Homes.getInstance().getSqlMethods().getHomeAmount(player.getUniqueId()).join();
         }
+        System.out.println(maxspace);
+        System.out.println(amount);
         return amount < maxspace;
 
     }

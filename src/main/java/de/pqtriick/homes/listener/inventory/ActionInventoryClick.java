@@ -58,10 +58,14 @@ public class ActionInventoryClick implements Listener {
     public void onMove(PlayerMoveEvent event) {
         if (Homes.getInstance().getOptionsConfig().getOptionsConfig().get(OptionsConfigEnum.OPTIONS_TPDELAY_CANCELONMOVE.getPath()).equals("false")) return;
         Player player = event.getPlayer();
-        if (!teleportDelayMap.containsKey(player)) return;
-        teleportDelayMap.get(player).cancel();
-        teleportDelayMap.remove(player);
-        player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.TELPORT_ACTIONBAR_CANCEL.getPath()));
+        Location prev = event.getTo();
+        Location current = player.getLocation();
+        if (prev.getX() != current.getX() || prev.getY() != current.getY() || current.getZ() != prev.getZ()) {
+            if (!teleportDelayMap.containsKey(player)) return;
+            teleportDelayMap.get(player).cancel();
+            teleportDelayMap.remove(player);
+            player.sendMessage(Homes.getInstance().getMessageConfig().getMSG(MessageEnum.TELPORT_ACTIONBAR_CANCEL.getPath()));
+        }
     }
 
     public static void openActionInventory(Player player) {
