@@ -19,9 +19,6 @@ import de.pqtriick.homes.data.configs.DatabaseConfig;
 import de.pqtriick.homes.database.SQLMethods;
 import de.pqtriick.homes.listener.compass.NavigationScheduler;
 import de.pqtriick.homes.listener.initalizer.PlayerJoinInitalizer;
-import de.pqtriick.homes.listener.inventory.ActionInventoryClick;
-import de.pqtriick.homes.listener.inventory.DeleteInventoryClick;
-import de.pqtriick.homes.listener.inventory.HomeInventoryClick;
 import de.pqtriick.homes.utils.Update.VersionCheck;
 import de.pqtriick.homes.utils.bstats.Metrics;
 import lombok.Getter;
@@ -100,9 +97,6 @@ public final class Homes extends JavaPlugin {
     private void initListener() {
         navigationScheduler = new NavigationScheduler();
         Bukkit.getPluginManager().registerEvents(new PlayerJoinInitalizer(), this);
-        Bukkit.getPluginManager().registerEvents(new HomeInventoryClick(), this);
-        Bukkit.getPluginManager().registerEvents(new DeleteInventoryClick(), this);
-        Bukkit.getPluginManager().registerEvents(new ActionInventoryClick(), this);
     }
 
     private void initDB() {

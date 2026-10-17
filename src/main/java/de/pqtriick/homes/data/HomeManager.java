@@ -99,9 +99,9 @@ public class HomeManager {
         FileConfiguration configuration = Homes.getInstance().getConfigManager().getConfiguration(getPlayerFile(player));
         if (configuration.getConfigurationSection("homes") == null) return homes;
         for (String homeName : configuration.getConfigurationSection("homes").getKeys(false)) {
-            double x = configuration.getDouble("homes." + homeName + ".X");
-            double y = configuration.getDouble("homes." + homeName + ".Y");
-            double z = configuration.getDouble("homes." + homeName + ".Z");
+            double x = Double.parseDouble(configuration.getString("homes." + homeName + ".X"));
+            double y = Double.parseDouble(configuration.getString("homes." + homeName + ".Y"));
+            double z = Double.parseDouble(configuration.getString("homes." + homeName + ".Z"));
             String worldName = configuration.getString("homes." + homeName + ".world");
             World world = Bukkit.getWorld(worldName);
             HomeObject object = new HomeObject(homeName, x, y, z, world);

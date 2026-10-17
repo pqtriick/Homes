@@ -16,4 +16,15 @@ public class HomeObject {
     private double z;
     private World world;
 
+
+    @Override
+    public String toString() {
+        return "HomeObject{" +
+                "name='" + name + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                ", world=" + world +
+                '}';
+    }
 }
